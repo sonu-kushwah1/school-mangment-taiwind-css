@@ -1,0 +1,226 @@
+{
+  "emp_list": [
+    {
+      "id": "1",
+      "fname": "Satendra",
+      "lname": "Dhakad",
+      "gender": "male",
+      "phone": "9977696218"
+    },
+    {
+      "id": "ca46",
+      "fname": "Cetan",
+      "lname": "Sharma",
+      "gender": "male",
+      "phone": "865082186"
+    },
+    {
+      "id": "15e0",
+      "fname": "Sonu",
+      "lname": "Kushwah",
+      "gender": "",
+      "phone": "08358957395"
+    },
+    {
+      "id": "cdbf",
+      "fname": "Adesh ",
+      "lname": "Kushwah",
+      "gender": "male",
+      "phone": "08358957395"
+    },
+    {
+      "id": "d6a2",
+      "fname": "Sonu",
+      "lname": "Kushwah",
+      "gender": "",
+      "phone": "08358957395"
+    },
+    {
+      "id": "9a1f",
+      "fname": "Sonu",
+      "lname": "Kushwah",
+      "gender": "",
+      "phone": "08358957395"
+    },
+    {
+      "id": "fb2b",
+      "fname": "Rohit",
+      "lname": "Kushwah",
+      "gender": "male",
+      "phone": "08358957395"
+    },
+    {
+      "id": "31a5",
+      "fname": "Krati",
+      "lname": "Shrivastav",
+      "gender": "female",
+      "phone": "08358957395",
+      "email": "snssystem.sonu.kushwah@gmail.com",
+      "address": "Anand Nagar Bhodapur Gwalior (M.P)",
+      "department": "HR",
+      "salary": "25000",
+      "designation": "Account"
+    }
+  ],
+  "student_list": [
+    {
+      "id": "1",
+      "fname": "Sonu",
+      "lname": "Kushwah",
+      "gender": "male",
+      "phone": "08358957395",
+      "class": "2",
+      "dob": "2026-02-27",
+      "email": "snssystem.sonu.kushwah@gmail.com",
+      "className": "Class 1",
+      "fees": "18000"
+    },
+    {
+      "id": "010c",
+      "fname": "Nitin",
+      "lname": "Sen",
+      "gender": "male",
+      "phone": "08358957395",
+      "className": "Class 2",
+      "fees": "19000",
+      "dob": "2026-03-11",
+      "email": "snssystem.sonu.kushwah@gmail.com"
+    },
+    {
+      "id": "48cb",
+      "fname": "Pankaj",
+      "lname": " Pal",
+      "gender": "male",
+      "phone": "08358957395",
+      "email": "snssystem.sonu.kushwah@gmail.com",
+      "dob": "2026-03-12"
+    },
+    {
+      "id": "0423",
+      "fname": "Yuvraj",
+      "lname": "Kuswhwah",
+      "gender": "male",
+      "phone": "08358957395",
+      "dob": "2026-03-13",
+      "bloodGroup": "A+",
+      "religion": "Hindu",
+      "email": "snssystem.sonu.kushwah@gmail.com",
+      "class": "",
+      "section": "A",
+      "fees": "18000",
+      "className": "Class 1"
+    }
+  ],
+  "class_list": [
+    {
+      "id": "beef",
+      "name": "Class 1"
+    },
+    {
+      "id": "c731",
+      "name": "Class 2"
+    },
+    {
+      "id": "e234",
+      "name": "Class 3"
+    },
+    {
+      "id": "4b43",
+      "name": "Class 4"
+    }
+  ],
+  "fees_list": [
+    {
+      "id": "37f9",
+      "classId": "beef",
+      "className": "Class 1",
+      "fees": "18000"
+    },
+    {
+      "id": "577b",
+      "classId": "c731",
+      "className": "Class 2",
+      "fees": "19000"
+    },
+    {
+      "id": "9fbf",
+      "classId": "e234",
+      "className": "Class 3",
+      "fees": "20000"
+    },
+    {
+      "id": "95f6",
+      "classId": "4b43",
+      "className": "Class 4",
+      "fees": "21000"
+    }
+  ],
+  "transport_list": [
+    {
+      "id": "efa9",
+      "routeName": "Anand Nagar",
+      "vehicleNumber": "MP07NH3026",
+      "driverName": "Sonu Kushwah",
+      "licenseNumber": "LH602455",
+      "phoneNumber": "8358957395"
+    }
+  ],
+  "expenses_list": [
+    {
+      "id": "6709",
+      "name": "Furniture",
+      "idNo": "101",
+      "expenseType": "Purchase",
+      "amount": "12000",
+      "phone": "08358957395",
+      "status": "Paid",
+      "date": "2026-03-12"
+    },
+    {
+      "id": "9c7b",
+      "name": "Sallary",
+      "idNo": "103",
+      "expenseType": "Salary",
+      "amount": "20000",
+      "phone": "+1(918)358-9573",
+      "status": "Paid",
+      "date": "2026-03-13"
+    },
+    {
+      "id": "417b",
+      "name": "Furniture",
+      "idNo": "101",
+      "expenseType": "Utilities",
+      "amount": "5000",
+      "phone": "9977696218",
+      "status": "Due",
+      "date": "2026-03-13"
+    }
+  ],
+  "user_list": [
+    {
+      "id": "a71f",
+      "name": "sonu kushwah",
+      "email": "snssystem.sonu.kushwah@gmail.com",
+      "phone": "08358957395"
+    }
+  ],
+  "blogCard": [
+    {
+      "id": "1",
+      "image": "https://img.freepik.com/free-photo/fireman-extinguishing-fire-building_23-2148953027.jpg",
+      "title": "Construction Sites & Fire Safety: What Every Contractor Should Know",
+      "date": "February 11, 2026",
+      "categories": "Blog, Fire System",
+      "excerpt": "Construction sites are busy, noisy, and constantly changing. Between deadlines, equipment, and workers moving all over the site, it’s easy to overlook one critical thing: fire safety. But the truth..."
+    },
+    {
+      "id": "2",
+      "image": "https://img.freepik.com/free-photo/close-up-fire-extinguisher_23-2148953030.jpg",
+      "title": "Fire Extinguisher Types: Choosing the Right One for Your Site",
+      "date": "January 28, 2026",
+      "categories": "Blog, Safety",
+      "excerpt": "Not all fire extinguishers are created equal. Learn which type is best for your construction site and how to use it effectively."
+    }
+  ]
+}

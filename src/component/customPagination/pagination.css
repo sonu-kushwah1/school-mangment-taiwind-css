@@ -1,0 +1,20 @@
+.pagination li a {
+  color: #042954;
+  border: 1px solid #042954;
+}
+
+.pagination li.active a {
+  background-color: #ffa601;
+  border-color: #ffa601;
+  color: white;
+}
+
+.pagination li a:hover {
+  background-color: #042954;
+  color: white;
+}
+
+.pagination li.disabled a {
+  color: gray;
+  border-color: #ccc;
+}
