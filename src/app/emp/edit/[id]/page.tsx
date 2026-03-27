@@ -3,8 +3,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
-import { LayoutRouter } from "next/dist/server/app-render/entry-base";
 import LayoutWrapper from "@/component/Layout";
+import Breadcrumb from "@/component/Breadcrumb";
+import InputField from "@/component/InputFiled";
+import SelectField from "@/component/selectFiled";
+import Button from "@/component/Button";
 
 export default function EditEmployee() {
   const { id } = useParams(); // 👈 URL se id milega
@@ -15,6 +18,11 @@ export default function EditEmployee() {
     lname: "",
     gender: "male",
     phone: "",
+    email: "",
+    department: "",
+    designation: "",
+    salary: "",
+    address: "",
   });
 
   // ✅ Fetch record by ID
@@ -32,7 +40,9 @@ export default function EditEmployee() {
   }, [id]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -55,75 +65,115 @@ export default function EditEmployee() {
 
   return (
     <LayoutWrapper>
+      <Breadcrumb />
       <div className="min-h-screen bg-gray-50 flex justify-center items-start p-6">
-        <div className="bg-white shadow-lg rounded-xl w-full max-w-3xl p-6">
+        <div className="bg-white p-6 rounded shadow w-full max-w-3xl">
           <h1 className="text-2xl font-bold mb-6 text-center">Edit Employee</h1>
 
           <form
             onSubmit={handleSubmit}
             className="grid grid-cols-1 md:grid-cols-2 gap-4"
           >
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                First Name
-              </label>
-              <input
-                type="text"
-                name="fname"
-                value={formData.fname}
-                onChange={handleChange}
-                className="w-full border rounded px-3 py-2"
-                required
-              />
-            </div>
+            <InputField
+              label="First Name"
+              name="fname"
+              value={formData.fname}
+              onChange={handleChange}
+              required
+            />
 
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Last Name
-              </label>
-              <input
-                type="text"
-                name="lname"
-                value={formData.lname}
-                onChange={handleChange}
-                className="w-full border rounded px-3 py-2"
-                required
-              />
-            </div>
+            <InputField
+              label="Last Name"
+              name="lname"
+              value={formData.lname}
+              onChange={handleChange}
+              required
+            />
 
-            <div>
-              <label className="block text-sm font-medium mb-1">Gender</label>
-              <select
-                name="gender"
-                value={formData.gender}
-                onChange={handleChange}
-                className="w-full border rounded px-3 py-2"
-              >
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
+            <SelectField
+              label="Gender"
+              name="gender"
+              value={formData.gender}
+              onChange={handleChange}
+              options={[
+                { label: "Male", value: "male" },
+                { label: "Female", value: "female" },
+                { label: "Other", value: "other" },
+              ]}
+            />
 
-            <div>
-              <label className="block text-sm font-medium mb-1">Phone</label>
-              <input
-                type="text"
-                name="phone"
-                value={formData.phone}
+            <InputField
+              label="Phone"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+            />
+
+            <InputField
+              label="Email"
+              name="email"
+              type="email"
+              value={(formData as any).email ?? ""}
+              onChange={handleChange}
+              required
+            />
+
+            <SelectField
+              label="Department"
+              name="department"
+              value={(formData as any).department ?? ""}
+              onChange={handleChange}
+              options={[
+                { label: "Select Department", value: "" },
+                { label: "HR", value: "HR" },
+                { label: "IT", value: "IT" },
+                { label: "Finance", value: "Finance" },
+                { label: "Marketing", value: "Marketing" },
+              ]}
+            />
+
+            <SelectField
+              label="Designation"
+              name="designation"
+              value={(formData as any).designation ?? ""}
+              onChange={handleChange}
+              options={[
+                { label: "Select Designation", value: "" },
+                { label: "Manager", value: "Manager" },
+                { label: "Developer", value: "Developer" },
+                { label: "Analyst", value: "Analyst" },
+                { label: "Designer", value: "Designer" },
+              ]}
+            />
+
+            <InputField
+              label="Salary"
+              name="salary"
+              type="number"
+              value={(formData as any).salary ?? ""}
+              onChange={handleChange}
+              required
+            />
+
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-1">Address</label>
+              <textarea
+                name="address"
+                value={(formData as any).address ?? ""}
                 onChange={handleChange}
                 className="w-full border rounded px-3 py-2"
+                rows={3}
                 required
               />
             </div>
 
             <div className="md:col-span-2 mt-4">
-              <button
+              <Button
+                label="Update Employee"
                 type="submit"
-                className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-              >
-                Update Employee
-              </button>
+                className="w-full"
+              />
             </div>
           </form>
         </div>

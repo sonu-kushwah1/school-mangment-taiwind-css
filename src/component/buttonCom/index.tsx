@@ -19,9 +19,9 @@ const Button: React.FC<ButtonProps> = ({
       onClick={onClick}
       className={`${
         full ? "w-full" : ""
-      } bg-blue-600 text-white px-4 py-2 rounded
+      } bg-[#ffa601] text-white px-4 py-2 rounded
       transition-all duration-300
-      hover:bg-blue-700 hover:shadow-lg hover:scale-[1.02]
+      hover:bg-[#e59200] hover:shadow-lg hover:scale-[1.02]
       active:scale-[0.98] active:shadow-sm`}
     >
       {text}

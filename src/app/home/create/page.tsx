@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import axios from "axios";
-import LayoutWrapper from '@/component/Layout';
+import LayoutWrapper from "@/component/Layout";
+import Button from "@/component/Button";
 
 const CreateBlog = () => {
   const [formData, setFormData] = useState({
@@ -95,13 +96,12 @@ const CreateBlog = () => {
             onChange={handleChange}
             required
           />
-          <button
+          <Button
             type="submit"
-            className="bg-blue-600 text-white px-4 py-2 w-full"
+            label={loading ? "Saving..." : "Save Blog"}
+            className="w-full"
             disabled={loading}
-          >
-            {loading ? "Saving..." : "Save Blog"}
-          </button>
+          />
           {success && <p className="text-green-600 mt-2">Blog created successfully!</p>}
           {error && <p className="text-red-600 mt-2">{error}</p>}
         </form>

@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import LayoutWrapper from "@/component/Layout";
 import Breadcrumb from "@/component/Breadcrumb";
+import Button from "@/component/Button";
 
 const CreateUser = () => {
 
@@ -93,12 +94,7 @@ const CreateUser = () => {
           </div>
 
           {/* Submit Button */}
-          <button
-            type="submit"
-            className="bg-green-600 text-white px-4 py-2 rounded"
-          >
-            Save User
-          </button>
+          <Button label="Save User" type="submit" />
 
         </form>
       </div>

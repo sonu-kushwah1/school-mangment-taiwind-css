@@ -8,6 +8,7 @@ import LayoutWrapper from "@/component/Layout";
 
 import { Slide, toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Breadcrumb from "@/component/Breadcrumb";
 
 export default function EmployeeList() {
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -39,7 +40,8 @@ const handleDelete = async (emp_id: string) => {
 
   return (
     <LayoutWrapper>
-      <div className="p-6">
+      <Breadcrumb />
+      <div className="bg-white p-6 rounded shadow">
         <div className="flex justify-between mb-4">
           <h1 className="text-2xl font-bold">Employees Curd in Simple</h1>
 
@@ -54,12 +56,12 @@ const handleDelete = async (emp_id: string) => {
         <table className="min-w-full border">
           <thead className="bg-gray-100">
             <tr>
-              <th className="border p-2">ID</th>
-              <th className="border p-2">First Name</th>
-              <th className="border p-2">Last Name</th>
-              <th className="border p-2">Gender</th>
-              <th className="border p-2">Mobile No</th>
-              <th className="border p-2">Actions</th>
+              <th className="border p-2 text-left">ID</th>
+              <th className="border p-2 text-left">First Name</th>
+              <th className="border p-2 text-left">Last Name</th>
+              <th className="border p-2 text-left">Gender</th>
+              <th className="border p-2 text-left">Mobile No</th>
+              <th className="border p-2 text-left">Actions</th>
             </tr>
           </thead>
 

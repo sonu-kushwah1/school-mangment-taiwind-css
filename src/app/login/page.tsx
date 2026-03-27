@@ -9,23 +9,54 @@ export default function LoginPage() {
     password: ""
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
     setFormData((prev) => ({
       ...prev,
       [name]: value
     }));
-
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log("Login Data:", formData);
+    setLoading(true);
+    setError("");
 
+    try {
+      const res = await fetch("http://localhost:5000/login", { // 🔥 API
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Login failed");
+      }
+
+      console.log("Login Success:", data);
+
+      // 👉 optional: token save
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+      }
+
+      // 👉 redirect to dashboard
+      window.location.href = "/";
+
+    } catch (err: any) {
+      setError(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -38,10 +69,7 @@ export default function LoginPage() {
           Student Management Login
         </h2>
 
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-4"
-        >
+        <form onSubmit={handleSubmit} className="space-y-4">
 
           {/* Email */}
           <div>
@@ -77,29 +105,30 @@ export default function LoginPage() {
             />
           </div>
 
+          {/* Error */}
+          {error && (
+            <p className="text-red-500 text-sm">{error}</p>
+          )}
+
           {/* Remember + Forgot */}
           <div className="flex justify-between text-sm">
-
             <label className="flex items-center gap-2">
               <input type="checkbox" />
               Remember me
             </label>
 
-            <a
-              href="#"
-              className="text-blue-600 hover:underline"
-            >
+            <a href="#" className="text-blue-600 hover:underline">
               Forgot Password?
             </a>
-
           </div>
 
-          {/* Login Button */}
+          {/* Button */}
           <button
             type="submit"
+            disabled={loading}
             className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
 
         </form>
@@ -107,11 +136,8 @@ export default function LoginPage() {
         {/* Register Link */}
         <p className="text-center text-sm mt-4">
           Don't have an account?
-          <a
-            href="/register"
-            className="text-blue-600 ml-1 hover:underline"
-          >
-            Register
+          <a href="/signup" className="text-blue-600 ml-1 hover:underline">
+            Sign Up
           </a>
         </p>
 

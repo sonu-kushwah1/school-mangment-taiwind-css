@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import LayoutWrapper from "@/component/Layout";
+import Breadcrumb from "@/component/Breadcrumb";
 
 export default function ViewEmployee() {
   const { id } = useParams();
@@ -30,8 +31,9 @@ export default function ViewEmployee() {
 
   return (
    <LayoutWrapper>
+    <Breadcrumb />
       <div className="min-h-screen bg-gray-50 flex justify-center p-6">
-        <div className="bg-white shadow-lg rounded-xl w-full max-w-2xl p-6">
+        <div className="bg-white p-6 rounded shadow w-full max-w-2xl">
           <h1 className="text-2xl font-bold mb-6 text-center">View Employee</h1>
 
           <div className="space-y-4">

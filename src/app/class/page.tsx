@@ -2,8 +2,13 @@
 import { api } from "@/api/api";
 import { useEffect, useState } from "react";
 import LayoutWrapper from "@/component/Layout";
+import Breadcrumb from "@/component/Breadcrumb";
+import { getRandomBorderColor } from "@/utils/randomColor";
+import InputField from "@/component/InputFiled";
 
 export default function ClassManager() {
+
+const [color] = useState(getRandomBorderColor());
 
   const API = api.classList;
 
@@ -71,18 +76,20 @@ export default function ClassManager() {
 
   return (
     <LayoutWrapper>
+      <Breadcrumb />
       <div className="bg-white p-6 rounded shadow">
 
         <h2 className="text-xl font-semibold mb-6">Class Manager</h2>
 
         {/* Add Class */}
         <div className="flex gap-4 mb-6">
-          <input
+          
+          <InputField
             type="text"
             placeholder="Enter Class"
             value={classInput}
             onChange={(e) => setClassInput(e.target.value)}
-            className="border p-2 rounded w-64"
+            
           />
 
           <button
@@ -105,22 +112,22 @@ export default function ClassManager() {
         </div> */}
 
         {/* Table */}
-        <table className="w-full border">
+        <table className="w-full border" style={{ "--row-border": color } as React.CSSProperties}>
           <thead className="bg-gray-100">
-            <tr>
-              <th className="border p-2">ID</th>
-              <th className="border p-2">Class Name</th>
-              <th className="border p-2">Actions</th>
+            <tr className="border-l-[5px] border-[var(--row-border)]">
+              <th className="border p-2 text-left">ID</th>
+              <th className="border p-2 text-left">Class Name</th>
+              <th className="border p-2 text-left">Actions</th>
             </tr>
           </thead>
 
           <tbody>
-            {classes.map((cls) => (
-              <tr key={cls.id}>
-                <td className="border p-2">{cls.id}</td>
+            {classes.map((cls,index) => (
+              <tr  className="bg-white border-l-[5px] border-[var(--row-border)]" key={cls.id}>
+                <td className="border p-2">{index + 1}</td>
                 <td className="border p-2">{cls.name}</td>
 
-                <td className="border p-2 flex gap-2">
+                <td className="border p-2 space-x-2">
                   <button
                     onClick={() => handleEdit(cls)}
                     className="bg-blue-500 text-white px-3 py-1 rounded"
@@ -139,6 +146,27 @@ export default function ClassManager() {
             ))}
           </tbody>
         </table>
+        {/* <table
+  className="w-full border"
+  style={{ "--row-border": color } as React.CSSProperties}
+>
+  <thead>
+    <tr className="border-l-[4px] border-[var(--row-border)]">
+      ...
+    </tr>
+  </thead>
+
+  <tbody>
+    {classes.map((cls, index) => (
+      <tr
+        key={cls.id}
+        className="border-l-[4px] border-[var(--row-border)]"
+      >
+        ...
+      </tr>
+    ))}
+  </tbody>
+</table> */}
 
       </div>
     </LayoutWrapper>

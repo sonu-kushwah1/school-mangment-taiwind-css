@@ -115,9 +115,9 @@ export default function ClassManager() {
           </thead>
 
           <tbody>
-            {classes.map((cls) => (
+            {classes.map((cls,index) => (
               <tr key={cls.id}>
-                <td className="border p-2">{cls.id}</td>
+                <td className="border p-2">{index + 1}</td>
                 <td className="border p-2">{cls.name}</td>
 
                 <td className="border p-2 flex gap-2">

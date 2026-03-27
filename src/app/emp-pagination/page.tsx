@@ -8,6 +8,7 @@ import { LayoutRouter } from "next/dist/server/app-render/entry-base";
 import LayoutWrapper from "@/component/Layout";
 
 import CustomPagination from "@/component/customPagination";
+import Breadcrumb from "@/component/Breadcrumb";
 
 export default function EmployeeList() {
 
@@ -40,7 +41,8 @@ export default function EmployeeList() {
 
   return (
     <LayoutWrapper>
-      <div className="p-6">
+      <Breadcrumb />
+      <div className="bg-white p-6 rounded shadow">
         <div className="flex justify-between mb-4">
           <h1 className="text-2xl font-bold">Employees Curd in Simple</h1>
 
@@ -55,12 +57,12 @@ export default function EmployeeList() {
         <table className="min-w-full border">
           <thead className="bg-gray-100">
             <tr>
-              <th className="border p-2">ID</th>
-              <th className="border p-2">First Name</th>
-              <th className="border p-2">Last Name</th>
-              <th className="border p-2">Gender</th>
-              <th className="border p-2">Mobile No</th>
-              <th className="border p-2">Actions</th>
+              <th className="border p-2 text-left">ID</th>
+              <th className="border p-2 text-left">First Name</th>
+              <th className="border p-2 text-left">Last Name</th>
+              <th className="border p-2 text-left">Gender</th>
+              <th className="border p-2 text-left">Mobile No</th>
+              <th className="border p-2 text-left">Actions</th>
             </tr>
           </thead>
 

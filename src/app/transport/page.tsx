@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import LayoutWrapper from "@/component/Layout";
+import Breadcrumb from "@/component/Breadcrumb";
+import TableActions from "@/component/TableActions";
+import InputField from "@/component/InputFiled";
 
 export default function TransportManager() {
-
   const API = "http://localhost:3001/transport_list";
 
   const [routeName, setRouteName] = useState("");
@@ -29,7 +31,6 @@ export default function TransportManager() {
 
   // Add or Update Transport
   const handleSave = async () => {
-
     if (!routeName || !vehicleNumber) return;
 
     const payload = {
@@ -37,31 +38,27 @@ export default function TransportManager() {
       vehicleNumber,
       driverName,
       licenseNumber,
-      phoneNumber
+      phoneNumber,
     };
 
     if (editId) {
-
       await fetch(`${API}/${editId}`, {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       });
 
       setEditId(null);
-
     } else {
-
       await fetch(API, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       });
-
     }
 
     setRouteName("");
@@ -74,10 +71,9 @@ export default function TransportManager() {
   };
 
   // Delete Transport
-  const handleDelete = async (id: number) => {
-
+  const handleDelete = async (id: number|string) => {
     await fetch(`${API}/${id}`, {
-      method: "DELETE"
+      method: "DELETE",
     });
 
     fetchTransport();
@@ -85,7 +81,6 @@ export default function TransportManager() {
 
   // Edit Transport
   const handleEdit = (item: any) => {
-
     setRouteName(item.routeName);
     setVehicleNumber(item.vehicleNumber);
     setDriverName(item.driverName);
@@ -97,55 +92,53 @@ export default function TransportManager() {
 
   return (
     <LayoutWrapper>
-
+      <Breadcrumb />
       <div className="bg-white p-6 rounded shadow">
-
         <h2 className="text-xl font-semibold mb-6">Transport Manager</h2>
 
         {/* Form */}
 
         <div className="grid grid-cols-2 gap-4 mb-6">
-
-          <input
+          <InputField
             type="text"
             placeholder="Route Name"
             value={routeName}
+            required
             onChange={(e) => setRouteName(e.target.value)}
-            className="border p-2 rounded"
           />
 
-          <input
+      
+          <InputField
             type="text"
             placeholder="Vehicle Number"
             value={vehicleNumber}
             onChange={(e) => setVehicleNumber(e.target.value)}
-            className="border p-2 rounded"
+           
           />
 
-          <input
+          <InputField
             type="text"
             placeholder="Driver Name"
             value={driverName}
             onChange={(e) => setDriverName(e.target.value)}
-            className="border p-2 rounded"
+            
           />
 
-          <input
+          <InputField
             type="text"
             placeholder="License Number"
             value={licenseNumber}
             onChange={(e) => setLicenseNumber(e.target.value)}
-            className="border p-2 rounded"
+         
           />
 
-          <input
+          <InputField
             type="text"
             placeholder="Phone Number"
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
-            className="border p-2 rounded"
+     
           />
-
         </div>
 
         <button
@@ -158,7 +151,6 @@ export default function TransportManager() {
         {/* Table */}
 
         <table className="w-full border">
-
           <thead className="bg-gray-100">
             <tr>
               <th className="border p-2">ID</th>
@@ -172,20 +164,17 @@ export default function TransportManager() {
           </thead>
 
           <tbody>
-
-            {transportList.map((item) => (
-
+            {transportList.map((item, index) => (
               <tr key={item.id}>
-
-                <td className="border p-2">{item.id}</td>
+                <td className="border p-2">{index + 1}</td>
                 <td className="border p-2">{item.routeName}</td>
                 <td className="border p-2">{item.vehicleNumber}</td>
                 <td className="border p-2">{item.driverName}</td>
                 <td className="border p-2">{item.licenseNumber}</td>
                 <td className="border p-2">{item.phoneNumber}</td>
 
-                <td className="border p-2 flex gap-2">
-
+                <td className="border p-2 space-x-2">
+              
                   <button
                     onClick={() => handleEdit(item)}
                     className="bg-blue-500 text-white px-3 py-1 rounded"
@@ -199,19 +188,12 @@ export default function TransportManager() {
                   >
                     Delete
                   </button>
-
                 </td>
-
               </tr>
-
             ))}
-
           </tbody>
-
         </table>
-
       </div>
-
     </LayoutWrapper>
   );
 }

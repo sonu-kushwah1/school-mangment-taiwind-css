@@ -8,6 +8,8 @@ import { Slide, toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import InputField from "@/component/InputFiled";
 import SelectField from "@/component/selectFiled";
+import Breadcrumb from "@/component/Breadcrumb";
+import Button from "@/component/Button";
 
 export default function CreateEmployee() {
    // Router instance for navigation
@@ -65,8 +67,9 @@ export default function CreateEmployee() {
 
   return (
     <LayoutWrapper>
+      <Breadcrumb />
       <div className="min-h-screen bg-gray-50 flex justify-center items-start p-6">
-        <div className="bg-white shadow-lg rounded-xl w-full max-w-3xl p-6">
+        <div className="bg-white p-6 rounded shadow w-full max-w-3xl">
           <h1 className="text-2xl font-bold mb-6 text-center">
             Admission Form
           </h1>
@@ -91,6 +94,7 @@ export default function CreateEmployee() {
               <InputField
                 label="Last Name"
                 name="lname"
+                type="text"
                 value={formData.lname}
                 onChange={handleChange}
                 required
@@ -225,13 +229,8 @@ export default function CreateEmployee() {
             </div>
 
             {/* Submit */}
-            <div className="md:col-span-2 mt-4">
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
-              >
-                Save Employee
-              </button>
+            <div className="md:col-span-2 w-full mt-4 flex justify-center">
+              <Button label="Save Student" type="submit" className="w-full" />
             </div>
           </form>
         </div>

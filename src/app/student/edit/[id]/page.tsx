@@ -8,6 +8,8 @@ import { Slide, toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import InputField from "@/component/InputFiled";
 import SelectField from "@/component/selectFiled";
+import Breadcrumb from "@/component/Breadcrumb";
+import Button from "@/component/Button";
 
 export default function EditStudent() {
 
@@ -126,10 +128,10 @@ export default function EditStudent() {
 
   return (
     <LayoutWrapper>
-
+      <Breadcrumb/>
       <div className="min-h-screen bg-gray-50 flex justify-center items-start p-6">
 
-        <div className="bg-white shadow-lg rounded-xl w-full max-w-3xl p-6">
+        <div className="bg-white p-6 rounded shadow w-full max-w-3xl">
 
           <h1 className="text-2xl font-bold mb-6 text-center">
             Edit Student
@@ -229,12 +231,11 @@ export default function EditStudent() {
             />
 
             <div className="md:col-span-2 mt-4">
-              <button
+              <Button
+                label="Update Student"
                 type="submit"
-                className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
-              >
-                Update Student
-              </button>
+                className="w-full"
+              />
             </div>
 
           </form>

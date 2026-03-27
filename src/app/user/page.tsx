@@ -4,19 +4,19 @@ import axios from "axios";
 import Breadcrumb from "@/component/Breadcrumb";
 import LayoutWrapper from "@/component/Layout";
 import { useRouter } from "next/navigation";
-import { Users } from "@/types/user";
+import type { User } from "@/types/user";
 import React, { useState } from "react";
 
 const User = () => {
   const router = useRouter();
 
   // state with type
-  const [user, setUser] = React.useState<Users[]>([]);
+  const [user, setUser] = React.useState<User[]>([]);
   const [name, setName] = useState([]);
 
   // fetch user function
   const fetchUser = async () => {
-    const res = await axios.get<Users[]>("http://localhost:3001/user_list");
+    const res = await axios.get<User[]>("http://localhost:3001/user_list");
     setUser(res.data);
   };
 

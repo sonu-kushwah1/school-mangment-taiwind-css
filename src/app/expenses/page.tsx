@@ -110,16 +110,16 @@ export default function ExpenseList() {
           <thead className="bg-gray-100">
 
             <tr>
-
-              <th className="border p-2">ID</th>
-              <th className="border p-2">Name</th>
-              <th className="border p-2">ID No</th>
-              <th className="border p-2">Expense Type</th>
-              <th className="border p-2">Amount</th>
-              <th className="border p-2">Phone</th>
-              <th className="border p-2">Status</th>
-              <th className="border p-2">Date</th>
-              <th className="border p-2">Actions</th>
+ 
+              <th className="border p-2 text-left">ID</th>
+              <th className="border p-2 text-left">Name</th>
+              <th className="border p-2 text-left">ID No</th>
+              <th className="border p-2 text-left">Expense Type</th>
+              <th className="border p-2 text-left">Amount</th>
+              <th className="border p-2 text-left">Phone</th>
+              <th className="border p-2 text-left">Status</th>
+              <th className="border p-2 text-left">Date</th>
+              <th className="border p-2 text-left">Actions</th>
 
             </tr>
 

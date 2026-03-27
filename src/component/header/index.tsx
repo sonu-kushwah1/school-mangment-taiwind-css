@@ -111,12 +111,32 @@
 // }
 // export default Navbar;
 "use client";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { setTheme, getTheme } from "@/utils/theme";
 
 export default function Navbar({ setSidebarOpen }: any) {
+  const router = useRouter();
+
+  const [openDropdown, setOpenDropdown] = useState(false);
+  const [theme, setThemeState] = useState<"light" | "dark">("light");
+
+  useEffect(() => {
+    const savedTheme = getTheme();
+    setThemeState(savedTheme);
+    setTheme(savedTheme);
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setThemeState(newTheme);
+    setTheme(newTheme);
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between bg-[#042954] border-b border-gray-700 px-6 py-4 text-white">
 
-      {/* Toggle button */}
+      {/* Sidebar Toggle */}
       <button
         onClick={() => setSidebarOpen((prev: boolean) => !prev)}
         className="text-2xl text-[#ffa601]"
@@ -124,12 +144,39 @@ export default function Navbar({ setSidebarOpen }: any) {
         ☰
       </button>
 
-      {/* Profile */}
-      <img
-        src="https://i.pravatar.cc/40"
-        className="w-8 h-8 rounded-full border-2 border-[#ffa601]"
-      />
+      {/* Right Section */}
+      <div className="flex items-center gap-4 relative">
+        
+        {/* 🌙 Theme Toggle */}
+        <button
+          onClick={toggleTheme}
+          className="px-3 py-1 border rounded"
+        >
+          {theme === "light" ? "🌙" : "☀️"}
+        </button>
 
+        {/* Profile */}
+        <div className="relative">
+          <img
+            src="https://i.pravatar.cc/40"
+            onClick={() => setOpenDropdown(!openDropdown)}
+            className="w-8 h-8 rounded-full border-2 border-[#ffa601] cursor-pointer"
+          />
+
+          {/* Dropdown */}
+          {openDropdown && (
+            <div className="absolute right-0 mt-2 w-40 bg-white text-black rounded-lg shadow-lg overflow-hidden z-50">
+              <button
+                onClick={() => router.push("/login")}
+                className="w-full text-left px-4 py-2 hover:bg-gray-100"
+              >
+                Logout
+              </button>
+            </div>
+          )}
+        </div>
+
+      </div>
     </header>
   );
 }

@@ -8,6 +8,8 @@ import { Slide, toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import InputField from "@/component/InputFiled";
 import SelectField from "@/component/selectFiled";
+import TextAreaField from "@/component/TextAreaFiled";
+import Button from "@/component/Button";
 
 export default function CreateEmployee() {
   const router = useRouter();
@@ -155,27 +157,18 @@ export default function CreateEmployee() {
             />
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium mb-1">
-                Address
-              </label>
-
-              <textarea
+              <TextAreaField
+                label="Address"
                 name="address"
                 value={formData.address}
                 onChange={handleChange}
-                className="w-full border rounded px-3 py-2"
                 rows={3}
                 required
               />
             </div>
 
             <div className="md:col-span-2 mt-4">
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
-              >
-                Save Employee
-              </button>
+              <Button label="Save Employee" type="submit" className="w-full" />
             </div>
           </form>
         </div>

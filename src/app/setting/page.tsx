@@ -1,8 +1,8 @@
 "use client";
 
 import LayoutWrapper from "@/component/Layout";
-import { LayoutRouter } from "next/dist/server/app-render/entry-base";
 import { useState } from "react";
+import Button from "@/component/Button";
 
 export default function SettingsPage() {
   const [form, setForm] = useState({
@@ -81,12 +81,7 @@ export default function SettingsPage() {
 
           {/* Button */}
           <div className="flex justify-end">
-            <button
-              type="submit"
-              className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700"
-            >
-              Save Changes
-            </button>
+            <Button label="Save Changes" type="submit" />
           </div>
 
         </form>

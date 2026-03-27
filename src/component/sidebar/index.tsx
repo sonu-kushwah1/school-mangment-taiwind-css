@@ -2,9 +2,17 @@
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import {
+  FaChevronDown,
+  FaBook,
+  FaUserGraduate,
+  FaUserTie,
+  FaUserCircle,
+  FaUser,
+} from "react-icons/fa";
+import { MdSchedule } from "react-icons/md";
 
 export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
-
   const pathname = usePathname();
 
   const [studentOpen, setStudentOpen] = useState(false);
@@ -27,7 +35,6 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
       </div>
 
       <nav className="p-3 space-y-2">
-
         {/* Dashboard */}
         <Link
           href="/"
@@ -35,8 +42,18 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
             pathname === "/" ? activeClass : ""
           }`}
         >
-          <svg className={iconClass} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3 13h8V3H3v10zm10 8h8V11h-8v10zM3 21h8v-6H3v6zm10-10h8V3h-8v8z" />
+          <svg
+            className={iconClass}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M3 13h8V3H3v10zm10 8h8V11h-8v10zM3 21h8v-6H3v6zm10-10h8V3h-8v8z"
+            />
           </svg>
           {sidebarOpen && "Dashboard"}
         </Link>
@@ -44,26 +61,47 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
         {/* Student */}
         <div>
           <button
-            onClick={() => setStudentOpen(prev => !prev)}
+            onClick={() => setStudentOpen((prev) => !prev)}
             className="w-full flex items-center justify-between p-2 rounded hover:bg-[#063d7a]"
           >
-            <div className="flex items-center">
-              <svg className={iconClass} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"/>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 14v7"/>
-              </svg>
+            <div className="flex items-center gap-2">
+              <FaUserGraduate className="text-lg text-[#ffa601]" />
               {sidebarOpen && "Student"}
             </div>
-            {sidebarOpen && <span>{studentOpen ? "▲" : "▼"}</span>}
+
+            {/* Arrow Icon */}
+            {sidebarOpen && (
+              <FaChevronDown
+                className={`transition-transform duration-300 ${
+                  studentOpen ? "rotate-180" : ""
+                }`}
+              />
+            )}
           </button>
 
           {studentOpen && sidebarOpen && (
             <div className="ml-6 mt-2 space-y-1">
-              <Link href="/student" className="block p-2 text-sm rounded hover:bg-[#063d7a]">
+              <Link
+                href="/student"
+                className="flex items-center gap-2 p-2 text-sm rounded hover:bg-[#063d7a]"
+              >
+                <FaBook className="text-[#ffa601]" />
                 All Student
               </Link>
-              <Link href="/student/admission-form" className="block p-2 text-sm rounded hover:bg-[#063d7a]">
+
+              <Link
+                href="/student/admission-form"
+                className="flex items-center gap-2 p-2 text-sm rounded hover:bg-[#063d7a]"
+              >
+                <FaBook className="text-[#ffa601]" />
                 Admission Form
+              </Link>
+              <Link
+                href="/fees/fees-submit"
+                className="flex items-center gap-2 p-2 text-sm rounded hover:bg-[#063d7a]"
+              >
+                <FaBook className="text-[#ffa601]" />
+                Fees Submit
               </Link>
             </div>
           )}
@@ -72,25 +110,38 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
         {/* Employee */}
         <div>
           <button
-            onClick={() => setEmpOpen(prev => !prev)}
+            onClick={() => setEmpOpen((prev) => !prev)}
             className="w-full flex items-center justify-between p-2 rounded hover:bg-[#063d7a]"
           >
-            <div className="flex items-center">
-              <svg className={iconClass} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5V4H2v16h5"/>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 20h6M12 16v4"/>
-              </svg>
+            <div className="flex items-center gap-2">
+              <FaUserTie className="text-lg text-[#ffa601]" />
               {sidebarOpen && "Employee"}
             </div>
-            {sidebarOpen && <span>{empOpen ? "▲" : "▼"}</span>}
+
+            {/* Arrow Icon */}
+            {sidebarOpen && (
+              <FaChevronDown
+                className={`transition-transform duration-300 ${
+                  empOpen ? "rotate-180" : ""
+                }`}
+              />
+            )}
           </button>
 
           {empOpen && sidebarOpen && (
             <div className="ml-6 mt-2 space-y-1">
-              <Link href="/emp" className="block p-2 text-sm rounded hover:bg-[#063d7a]">
+              <Link
+                href="/emp"
+                className="flex items-center gap-2 p-2 text-sm rounded hover:bg-[#063d7a]"
+              >
+                <FaBook className="text-[#ffa601]" />
                 Employee List
               </Link>
-              <Link href="/emp-pagination" className="block p-2 text-sm rounded hover:bg-[#063d7a]">
+              <Link
+                href="/emp-pagination"
+                className="flex items-center gap-2 p-2 text-sm rounded hover:bg-[#063d7a]"
+              >
+                <FaBook className="text-[#ffa601]" />
                 Employee Pagination
               </Link>
             </div>
@@ -100,30 +151,65 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
         {/* Class */}
         <div>
           <button
-            onClick={() => setClassOpen(prev => !prev)}
+            onClick={() => setClassOpen((prev) => !prev)}
             className="w-full flex items-center justify-between p-2 rounded hover:bg-[#063d7a]"
           >
-            <div className="flex items-center">
-              <svg className={iconClass} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 19.5V5a2 2 0 012-2h12v16H6a2 2 0 01-2-2.5z"/>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M8 7h8M8 11h8M8 15h6"/>
-              </svg>
+            <div className="flex items-center gap-2">
+              <FaBook className="text-lg text-[#ffa601]" />
               {sidebarOpen && "Class"}
             </div>
-            {sidebarOpen && <span>{classOpen ? "▲" : "▼"}</span>}
+
+            {/* Arrow Icon */}
+            {sidebarOpen && (
+              <FaChevronDown
+                className={`transition-transform duration-300 ${
+                  classOpen ? "rotate-180" : ""
+                }`}
+              />
+            )}
           </button>
 
+          {/* Submenu */}
           {classOpen && sidebarOpen && (
             <div className="ml-6 mt-2 space-y-1">
-              <Link href="/class" className="block p-2 text-sm rounded hover:bg-[#063d7a]">
+              <Link
+                href="/class"
+                className="flex items-center gap-2 p-2 text-sm rounded hover:bg-[#063d7a]"
+              >
+                <FaBook className="text-[#ffa601]" />
                 Class
               </Link>
-              <Link href="/class-schedule" className="block p-2 text-sm rounded hover:bg-[#063d7a]">
+
+              <Link
+                href="/class-schedule"
+                className="flex items-center gap-2 p-2 text-sm rounded hover:bg-[#063d7a]"
+              >
+                <MdSchedule className="text-[#ffa601]" />
                 Class Schedule
               </Link>
             </div>
           )}
         </div>
+
+        {/* reactDrapTable */}
+        <Link
+          href="/reactDrapTable"
+          className={`flex items-center p-2 rounded hover:bg-[#063d7a] ${
+            pathname === "/reactDrapTable" ? activeClass : ""
+          }`}
+        >
+          <svg
+            className={iconClass}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+          >
+            <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+          {sidebarOpen && "ReactDrapTable"}
+        </Link>
 
         {/* Fees */}
         <Link
@@ -132,7 +218,13 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
             pathname === "/fees" ? activeClass : ""
           }`}
         >
-          <svg className={iconClass} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <svg
+            className={iconClass}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+          >
             <rect x="2" y="6" width="20" height="12" rx="2"></rect>
             <circle cx="12" cy="12" r="3"></circle>
           </svg>
@@ -146,13 +238,10 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
             pathname === "/user" ? activeClass : ""
           }`}
         >
-          <svg className={iconClass} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <rect x="2" y="6" width="20" height="12" rx="2"></rect>
-            <circle cx="12" cy="12" r="3"></circle>
-          </svg>
+          <FaUser className={iconClass} />
+
           {sidebarOpen && "User"}
         </Link>
-
         {/* Transport */}
         <Link
           href="/transport"
@@ -160,7 +249,13 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
             pathname === "/transport" ? activeClass : ""
           }`}
         >
-          <svg className={iconClass} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <svg
+            className={iconClass}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+          >
             <rect x="3" y="4" width="18" height="12" rx="2"></rect>
             <path d="M3 10h18"></path>
             <circle cx="7" cy="18" r="2"></circle>
@@ -172,28 +267,50 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
         {/* Account */}
         <div>
           <button
-            onClick={() => setAccountOpen(prev => !prev)}
+            onClick={() => setAccountOpen((prev) => !prev)}
             className="w-full flex items-center justify-between p-2 rounded hover:bg-[#063d7a]"
           >
-            <div className="flex items-center">
-              <svg className={iconClass} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 19.5V5a2 2 0 012-2h12v16H6a2 2 0 01-2-2.5z"/>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M8 7h8M8 11h8M8 15h6"/>
-              </svg>
+            <div className="flex items-center gap-2">
+              <FaUserCircle className="text-lg text-[#ffa601]" />
               {sidebarOpen && "Account"}
             </div>
-            {sidebarOpen && <span>{accountOpen ? "▲" : "▼"}</span>}
+
+            {/* Arrow Icon */}
+            {sidebarOpen && (
+              <FaChevronDown
+                className={`transition-transform duration-300 ${
+                  accountOpen ? "rotate-180" : ""
+                }`}
+              />
+            )}
           </button>
 
           {accountOpen && sidebarOpen && (
             <div className="ml-6 mt-2 space-y-1">
-              <Link href="/expenses" className="block p-2 text-sm rounded hover:bg-[#063d7a]">
+              <Link
+                href="/expenses"
+                className="block p-2 text-sm rounded hover:bg-[#063d7a]"
+              >
                 Expenses
               </Link>
             </div>
           )}
         </div>
 
+        {/* Account */}
+
+        {/* User Managment */}
+        <Link
+          href="/user-managment"
+          className={`flex items-center p-2 rounded hover:bg-[#063d7a] ${
+            pathname === "/user-managment" ? activeClass : ""
+          }`}
+        >
+          <FaUser className={iconClass} />
+
+          {sidebarOpen && "user-managment"}
+        </Link>
+        {/* Transport */}
       </nav>
     </aside>
   );

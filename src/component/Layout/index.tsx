@@ -13,7 +13,10 @@ const LayoutWrapper = ({ children }: PageLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100"  style={{
+        backgroundColor: "var(--bg-color)",
+        color: "var(--text-color)",
+      }}>
 
       <Sidebar sidebarOpen={sidebarOpen} />
 

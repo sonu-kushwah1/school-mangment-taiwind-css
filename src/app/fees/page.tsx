@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import LayoutWrapper from "@/component/Layout";
+import Breadcrumb from "@/component/Breadcrumb";
 
 export default function FeesManager() {
 
@@ -91,6 +92,7 @@ export default function FeesManager() {
 
   return (
     <LayoutWrapper>
+      <Breadcrumb />
       <div className="bg-white p-6 rounded shadow">
 
         <h2 className="text-xl font-bold mb-6">Class Wise Fees</h2>
@@ -136,23 +138,23 @@ export default function FeesManager() {
 
           <thead className="bg-gray-100">
             <tr>
-              <th className="border p-2">ID</th>
-              <th className="border p-2">Class</th>
-              <th className="border p-2">Fees</th>
-              <th className="border p-2">Action</th>
+              <th className="border p-2 text-left">ID</th>
+              <th className="border p-2 text-left">Class</th>
+              <th className="border p-2 text-left">Fees</th>
+              <th className="border p-2 text-left">Action</th>
             </tr>
           </thead>
 
           <tbody>
 
-            {feesList.map((item) => (
+            {feesList.map((item,index) => (
               <tr key={item.id}>
 
-                <td className="border p-2">{item.id}</td>
+                <td className="border p-2">{index + 1}</td>
                 <td className="border p-2">{item.className}</td>
                 <td className="border p-2">{item.fees}</td>
 
-                <td className="border p-2 flex gap-2">
+                <td className="border p-2 space-x-2">
 
                   <button
                     onClick={() => editFees(item)}

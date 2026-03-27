@@ -8,6 +8,7 @@ import { Slide, toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import InputField from "@/component/InputFiled";
 import SelectField from "@/component/selectFiled";
+import Button from "@/component/Button";
 
 export default function CreateEmployee() {
   const router = useRouter();
@@ -33,7 +34,18 @@ export default function CreateEmployee() {
     const fetchFees = async () => {
       try {
         const res = await axios.get("http://localhost:3001/fees_list");
-        setFeesList(res.data);
+        const data = res.data;
+        setFeesList(data);
+
+        // Set default class and fees on first load
+        if (data.length > 0) {
+          const firstClass = data[0];
+          setFormData((prev) => ({
+            ...prev,
+            className: prev.className || firstClass.className,
+            fees: prev.fees || firstClass.fees
+          }));
+        }
       } catch (error) {
         console.error("Error fetching fees list:", error);
       }
@@ -208,12 +220,7 @@ export default function CreateEmployee() {
             />
 
             <div className="md:col-span-2 mt-4">
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-              >
-                Save Student
-              </button>
+              <Button label="Save Student" type="submit" className="w-full" />
             </div>
 
           </form>

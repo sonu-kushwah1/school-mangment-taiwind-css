@@ -9,12 +9,18 @@ export default function Breadcrumb() {
   const pathSegments = pathname.split("/").filter((segment) => segment);
 
   return (
-    <nav className="text-sm text-gray-600 mb-4">
-      <ol className="flex items-center flex-wrap">
+    <nav
+      aria-label="Breadcrumb"
+      className="sticky top-0 z-30 mb-4 rounded-md border border-[#ffa601]/30 bg-white/95 px-3 py-2 text-sm shadow-sm backdrop-blur"
+    >
+      <ol className="flex items-center flex-wrap gap-y-1">
 
         {/* Home */}
         <li>
-          <Link href="/" className="text-blue-600 hover:underline">
+          <Link
+            href="/"
+            className="font-medium text-[#042954] hover:text-[#ffa601] transition"
+          >
             Home
           </Link>
         </li>
@@ -25,16 +31,16 @@ export default function Breadcrumb() {
           return (
             <li key={index} className="flex items-center">
 
-              <span className="mx-2 text-gray-400">/</span>
+              <span className="mx-2 text-[#042954]/40">/</span>
 
               {index === pathSegments.length - 1 ? (
-                <span className="text-gray-800 capitalize font-medium">
+                <span className="capitalize font-semibold text-[#ffa601]">
                   {segment.replace("-", " ")}
                 </span>
               ) : (
                 <Link
                   href={href}
-                  className="text-blue-600 hover:underline capitalize"
+                  className="capitalize font-medium text-[#042954] hover:text-[#ffa601] transition"
                 >
                   {segment.replace("-", " ")}
                 </Link>
