@@ -34,7 +34,7 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
         {sidebarOpen ? "Dashboard" : "D"}
       </div>
 
-      <nav className="p-3 space-y-2">
+      <nav className="p-3 space-y-2 ">
         {/* Dashboard */}
         <Link
           href="/"
@@ -138,6 +138,13 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
                 Employee List
               </Link>
               <Link
+                href="/emp-page"
+                className="flex items-center gap-2 p-2 text-sm rounded hover:bg-[#063d7a]"
+              >
+                <FaBook className="text-[#ffa601]" />
+                Employee DataTable
+              </Link>
+              <Link
                 href="/emp-pagination"
                 className="flex items-center gap-2 p-2 text-sm rounded hover:bg-[#063d7a]"
               >
@@ -180,13 +187,13 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
                 Class
               </Link>
 
-              <Link
+              {/* <Link
                 href="/class-schedule"
                 className="flex items-center gap-2 p-2 text-sm rounded hover:bg-[#063d7a]"
               >
                 <MdSchedule className="text-[#ffa601]" />
                 Class Schedule
-              </Link>
+              </Link> */}
             </div>
           )}
         </div>
@@ -310,7 +317,41 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
 
           {sidebarOpen && "user-managment"}
         </Link>
-        {/* Transport */}
+        {/* User Role */}
+        <Link
+          href="/roles-permission"
+          className={`flex items-center p-2 rounded hover:bg-[#063d7a] ${
+            pathname === "/roles-permission" ? activeClass : ""
+          }`}
+        >
+          <FaUser className={iconClass} />
+
+          {sidebarOpen && "Roles Permission"}
+        </Link>
+        {/* User Managment */}
+        <Link
+          href="/user-managment"
+          className={`flex items-center p-2 rounded hover:bg-[#063d7a] ${
+            pathname === "/user-managment" ? activeClass : ""
+          }`}
+        >
+          <FaUser className={iconClass} />
+
+          {sidebarOpen && "user-managment"}
+        </Link>
+        {/* User Role */}
+        <Link
+          href="/roles-permission"
+          className={`flex items-center p-2 rounded hover:bg-[#063d7a] ${
+            pathname === "/roles-permission" ? activeClass : ""
+          }`}
+        >
+          <FaUser className={iconClass} />
+
+          {sidebarOpen && "Roles Permission"}
+        </Link>
+        
+     
       </nav>
     </aside>
   );

@@ -3,8 +3,58 @@
 import { useEffect, useState } from "react";
 import LayoutWrapper from "@/component/Layout";
 import Breadcrumb from "@/component/Breadcrumb";
+import axios from "axios";
+import CommonDataTable from "@/component/DataTable";
+import { Employee } from "@/types/employee";
+
+type Fees = {
+  id: any;
+  classId: string;
+  className: string;
+  fees: number;
+};
 
 export default function FeesManager() {
+
+    // ✅ Columns (IMPORTANT: library format)
+  const columns = [
+    {
+      name: "ID",
+      cell: (_: Fees, index: number) => index + 1,
+      width: "80px",
+    },
+    {
+      name: "Class Name",
+      selector: (row: Fees) => row.className,
+      sortable: true,
+    },
+    {
+      name: "Fees",
+      selector: (row: Fees) => row.fees,
+      sortable: true,
+    },
+    {
+      name: "Actions",
+      cell: (fees: Fees) => (
+        <div className="flex items-center gap-2 whitespace-nowrap">
+          <button
+             onClick={() => editFees(fees)}
+            className="bg-green-600 text-white px-3 py-1 rounded text-sm"
+          >
+            Edit
+          </button>
+
+
+          <button
+             onClick={() => deleteFees(fees.id)}
+            className="bg-red-600 text-white px-3 py-1 rounded text-sm"
+          >
+            Delete
+          </button>
+        </div>
+      ),
+    },
+  ];
 
   const CLASS_API = "http://localhost:3001/class_list";
   const FEES_API = "http://localhost:3001/fees_list";
@@ -16,18 +66,24 @@ export default function FeesManager() {
   const [fees, setFees] = useState("");
   const [editId, setEditId] = useState<number | null>(null);
 
-  // Fetch Classes
+  // ✅ Fetch Classes
   const getClasses = async () => {
-    const res = await fetch(CLASS_API);
-    const data = await res.json();
-    setClasses(data);
+    try {
+      const res = await axios.get(CLASS_API);
+      setClasses(res.data);
+    } catch (error) {
+      console.error("Error fetching classes:", error);
+    }
   };
 
-  // Fetch Fees
+  // ✅ Fetch Fees
   const getFees = async () => {
-    const res = await fetch(FEES_API);
-    const data = await res.json();
-    setFeesList(data);
+    try {
+      const res = await axios.get(FEES_API);
+      setFeesList(res.data);
+    } catch (error) {
+      console.error("Error fetching fees:", error);
+    }
   };
 
   useEffect(() => {
@@ -35,52 +91,50 @@ export default function FeesManager() {
     getFees();
   }, []);
 
-  // Add or Update Fees
+  // ✅ Add or Update Fees
   const saveFees = async () => {
 
     if (!classId || !fees) return;
 
     const className = classes.find((c) => c.id == classId)?.name;
 
-    if (editId) {
+    try {
+      if (editId) {
 
-      await fetch(`${FEES_API}/${editId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+        await axios.put(`${FEES_API}/${editId}`, {
           classId,
           className,
           fees
-        })
-      });
+        });
 
-      setEditId(null);
+        setEditId(null);
 
-    } else {
+      } else {
 
-      await fetch(FEES_API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+        await axios.post(FEES_API, {
           classId,
           className,
           fees
-        })
-      });
+        });
+      }
+
+      setClassId("");
+      setFees("");
+      getFees();
+
+    } catch (error) {
+      console.error("Error saving fees:", error);
     }
-
-    setClassId("");
-    setFees("");
-    getFees();
   };
 
-  // Delete Fees
+  // ✅ Delete Fees
   const deleteFees = async (id: number) => {
-    await fetch(`${FEES_API}/${id}`, {
-      method: "DELETE"
-    });
-
-    getFees();
+    try {
+      await axios.delete(`${FEES_API}/${id}`);
+      getFees();
+    } catch (error) {
+      console.error("Error deleting fees:", error);
+    }
   };
 
   // Edit Fees
@@ -98,7 +152,6 @@ export default function FeesManager() {
         <h2 className="text-xl font-bold mb-6">Class Wise Fees</h2>
 
         {/* Form */}
-
         <div className="flex gap-4 mb-6">
 
           <select
@@ -132,52 +185,12 @@ export default function FeesManager() {
 
         </div>
 
-        {/* Fees Table */}
-
-        <table className="w-full border">
-
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="border p-2 text-left">ID</th>
-              <th className="border p-2 text-left">Class</th>
-              <th className="border p-2 text-left">Fees</th>
-              <th className="border p-2 text-left">Action</th>
-            </tr>
-          </thead>
-
-          <tbody>
-
-            {feesList.map((item,index) => (
-              <tr key={item.id}>
-
-                <td className="border p-2">{index + 1}</td>
-                <td className="border p-2">{item.className}</td>
-                <td className="border p-2">{item.fees}</td>
-
-                <td className="border p-2 space-x-2">
-
-                  <button
-                    onClick={() => editFees(item)}
-                    className="bg-blue-500 text-white px-3 py-1 rounded"
-                  >
-                    Edit
-                  </button>
-
-                  <button
-                    onClick={() => deleteFees(item.id)}
-                    className="bg-red-500 text-white px-3 py-1 rounded"
-                  >
-                    Delete
-                  </button>
-
-                </td>
-
-              </tr>
-            ))}
-
-          </tbody>
-
-        </table>
+         {/* ✅ Correct Table */}
+              <CommonDataTable
+                title="Fees List"
+                data={feesList}
+                columns={columns}
+              />
 
       </div>
     </LayoutWrapper>

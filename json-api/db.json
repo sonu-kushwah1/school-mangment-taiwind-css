@@ -137,7 +137,8 @@
       "email": "snssystem.sonu.kushwah@gmail.com",
       "className": "Class 2",
       "section": "A",
-      "fees": "19000"
+      "fees": "19000",
+      "paidFees": "5000"
     },
     {
       "id": "aea2",
@@ -146,6 +147,73 @@
       "gender": "male",
       "phone": "08358957395",
       "dob": "2026-03-07",
+      "bloodGroup": "A+",
+      "religion": "Hindu",
+      "email": "snssystem.sonu.kushwah@gmail.com",
+      "className": "Class 1",
+      "section": "A",
+      "fees": "18000"
+    },
+    {
+      "id": "01b8",
+      "fname": "Ayushi",
+      "lname": "Gupta",
+      "gender": "female",
+      "phone": "08358957395",
+      "dob": "2026-04-24",
+      "bloodGroup": "AB-",
+      "religion": "Christian",
+      "email": "snssystem.sonu.kushwah@gmail.com",
+      "class": "12",
+      "section": "A"
+    },
+    {
+      "id": "b2c5",
+      "fname": "Manvi ",
+      "lname": "Kushwah",
+      "gender": "female",
+      "phone": "08358957395",
+      "dob": "2026-04-24",
+      "bloodGroup": "A+",
+      "religion": "Hindu",
+      "email": "snssystem.sonu.kushwah@gmail.com",
+      "class": "4",
+      "section": "A"
+    },
+    {
+      "id": "328d",
+      "fname": "Mona",
+      "lname": "Gupta",
+      "gender": "female",
+      "phone": "08358957395",
+      "dob": "2026-04-23",
+      "bloodGroup": "A+",
+      "religion": "Hindu",
+      "email": "snssystem.sonu.kushwah@gmail.com",
+      "class": "1",
+      "section": "A"
+    },
+    {
+      "id": "3c77",
+      "fname": "Rinkes",
+      "lname": "Kushwah",
+      "gender": "male",
+      "phone": "08358957395",
+      "dob": "2026-04-23",
+      "bloodGroup": "A+",
+      "religion": "Hindu",
+      "email": "snssystem.sonu.kushwah@gmail.com",
+      "class": "3",
+      "section": "A",
+      "fee": 0
+    },
+    {
+      "id": "8a65",
+      "fname": "Surendra",
+      "lname": "Rajavat",
+      "gender": "male",
+      "phone": "8358957394",
+      "dob": "2026-05-07",
       "bloodGroup": "A+",
       "religion": "Hindu",
       "email": "snssystem.sonu.kushwah@gmail.com",
@@ -174,6 +242,28 @@
     {
       "id": "f13f",
       "name": "Class 5"
+    },
+    {
+      "id": "f0e9",
+      "name": "Class 6"
+    },
+    {
+      "id": "f5fc",
+      "name": "Class 7"
+    }
+  ],
+  "fees_submit": [
+    {
+      "id": "fcf1",
+      "className": "Class 2",
+      "studentId": "4013",
+      "studentName": "Rohit Sharma",
+      "totalFees": 19000,
+      "paidFees": 5000,
+      "dueFees": 19000,
+      "installmentMonth": "",
+      "payAmount": 5000,
+      "remainingFees": 14000
     }
   ],
   "fees_list": [
@@ -206,6 +296,12 @@
       "classId": "f13f",
       "className": "Class 5",
       "fees": "22000"
+    },
+    {
+      "classId": "f0e9",
+      "className": "Class 6",
+      "fees": "24500",
+      "id": "795a"
     }
   ],
   "transport_list": [
@@ -214,16 +310,24 @@
       "vehicleNumber": "MP07NH3026",
       "driverName": "Sonu Kushwah",
       "licenseNumber": "LH602455",
-      "phoneNumber": "9977696218",
+      "phoneNumber": "9977696219",
       "id": "efa9"
     },
     {
-      "id": "d3f7",
       "routeName": "Sikandar Kampoo",
       "vehicleNumber": "Mp07MS9846",
       "driverName": "Devendra Kushwah",
       "licenseNumber": "\tLH602456",
-      "phoneNumber": "8358957395"
+      "phoneNumber": "8358957395",
+      "id": "d3f7"
+    },
+    {
+      "id": "ba0a",
+      "routeName": "Purani Chawani",
+      "vehicleNumber": "MP07MS9977",
+      "driverName": "Shivam Chauhan",
+      "licenseNumber": "LB123466",
+      "phoneNumber": "895987956"
     }
   ],
   "expenses_list": [

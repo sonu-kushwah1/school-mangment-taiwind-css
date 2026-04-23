@@ -9,12 +9,15 @@ import "react-toastify/dist/ReactToastify.css";
 import { Slide, toast, ToastContainer } from "react-toastify";
 import CustomPagination from "@/component/customPagination";
 import Breadcrumb from "@/component/Breadcrumb";
-import Button from "@/component/buttonCom";
 import PageHeader from "@/utils/PageHeader";
 import InputField from "@/component/InputFiled";
 
+import { api } from "@/api";
+
 
 export default function EmployeeList() {
+  const API = api.studentList;
+
   const [students, setStudents] = useState<Student[]>([]);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,9 +32,7 @@ export default function EmployeeList() {
 
   // Fetch Data
   const fetchEmployees = async () => {
-    const res = await axios.get<Student[]>(
-      "http://localhost:3001/student_list"
-    );
+    const res = await axios.get<Student[]>(API);
     setStudents(res.data);
   };
 
@@ -72,7 +73,7 @@ const filteredStudents = students.filter((item) =>
   const handleDelete = async (student_id: string) => {
     if (!confirm("Are you sure you want to delete this student?")) return;
 
-    await axios.delete(`http://localhost:3001/student_list/${student_id}`);
+    await axios.delete(`${API}/${student_id}`);
     toast.success("Student Deleted Successfully");
     fetchEmployees();
   };

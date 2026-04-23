@@ -1,6 +1,17 @@
-const BASE_URL = "http://localhost:3001";
+const BASE_URL: string = "http://localhost:3001";
 
-export const api = {
+type ApiEndpoints = {
+  empList: any;
+  studentList: any;
+  classList: any;
+  feesList: any;
+  transportList: any;
+  expensesList: any;
+  userList: any;
+  blogCard: any;
+};
+
+export const api: ApiEndpoints = {
   empList: `${BASE_URL}/emp_list`,
   studentList: `${BASE_URL}/student_list`,
   classList: `${BASE_URL}/class_list`,

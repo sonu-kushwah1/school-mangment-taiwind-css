@@ -1,14 +1,15 @@
 "use client";
-import { api } from "@/api/api";
+import { api } from "@/api";
 import { useEffect, useState } from "react";
 import LayoutWrapper from "@/component/Layout";
 import Breadcrumb from "@/component/Breadcrumb";
 import { getRandomBorderColor } from "@/utils/randomColor";
 import InputField from "@/component/InputFiled";
+import axios from "axios";
 
 export default function ClassManager() {
 
-const [color] = useState(getRandomBorderColor());
+  const [color] = useState(getRandomBorderColor());
 
   const API = api.classList;
 
@@ -16,56 +17,51 @@ const [color] = useState(getRandomBorderColor());
   const [classes, setClasses] = useState<any[]>([]);
   const [editId, setEditId] = useState<number | null>(null);
 
-  // Fetch Classes
+  // ✅ Fetch Classes (Axios)
   const fetchClasses = async () => {
-    const res = await fetch(API);
-    const data = await res.json();
-    setClasses(data);
+    try {
+      const res = await axios.get(API);
+      setClasses(res.data);
+    } catch (error) {
+      console.error("Error fetching classes:", error);
+    }
   };
 
   useEffect(() => {
     fetchClasses();
   }, []);
 
-  // Add or Update Class
+  // ✅ Add or Update Class (Axios)
   const handleAddClass = async () => {
     if (!classInput) return;
 
-    if (editId) {
-      await fetch(`${API}/${editId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+    try {
+      if (editId) {
+        await axios.put(`${API}/${editId}`, {
           name: classInput,
-        }),
-      });
+        });
+        setEditId(null);
+      } else {
+        await axios.post(API, {
+          name: classInput,
+        });
+      }
 
-      setEditId(null);
-    } else {
-      await fetch(API, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: classInput,
-        }),
-      });
+      setClassInput("");
+      fetchClasses();
+    } catch (error) {
+      console.error("Error saving class:", error);
     }
-
-    setClassInput("");
-    fetchClasses();
   };
 
-  // Delete Class
+  // ✅ Delete Class (Axios)
   const handleDelete = async (id: number) => {
-    await fetch(`${API}/${id}`, {
-      method: "DELETE",
-    });
-
-    fetchClasses();
+    try {
+      await axios.delete(`${API}/${id}`);
+      fetchClasses();
+    } catch (error) {
+      console.error("Error deleting class:", error);
+    }
   };
 
   // Edit Class
@@ -89,7 +85,6 @@ const [color] = useState(getRandomBorderColor());
             placeholder="Enter Class"
             value={classInput}
             onChange={(e) => setClassInput(e.target.value)}
-            
           />
 
           <button
@@ -100,19 +95,11 @@ const [color] = useState(getRandomBorderColor());
           </button>
         </div>
 
-        {/* Select Dropdown */}
-        {/* <div className="mb-6">
-          <label className="block mb-2">Select Class</label>
-          <select className="border p-2 rounded w-64">
-            <option>Select Class</option>
-            {classes.map((cls) => (
-              <option key={cls.id}>{cls.name}</option>
-            ))}
-          </select>
-        </div> */}
-
         {/* Table */}
-        <table className="w-full border" style={{ "--row-border": color } as React.CSSProperties}>
+        <table
+          className="w-full border"
+          style={{ "--row-border": color } as React.CSSProperties}
+        >
           <thead className="bg-gray-100">
             <tr className="border-l-[5px] border-[var(--row-border)]">
               <th className="border p-2 text-left">ID</th>
@@ -122,8 +109,11 @@ const [color] = useState(getRandomBorderColor());
           </thead>
 
           <tbody>
-            {classes.map((cls,index) => (
-              <tr  className="bg-white border-l-[5px] border-[var(--row-border)]" key={cls.id}>
+            {classes.map((cls, index) => (
+              <tr
+                className="bg-white border-l-[5px] border-[var(--row-border)]"
+                key={cls.id}
+              >
                 <td className="border p-2">{index + 1}</td>
                 <td className="border p-2">{cls.name}</td>
 
@@ -146,27 +136,6 @@ const [color] = useState(getRandomBorderColor());
             ))}
           </tbody>
         </table>
-        {/* <table
-  className="w-full border"
-  style={{ "--row-border": color } as React.CSSProperties}
->
-  <thead>
-    <tr className="border-l-[4px] border-[var(--row-border)]">
-      ...
-    </tr>
-  </thead>
-
-  <tbody>
-    {classes.map((cls, index) => (
-      <tr
-        key={cls.id}
-        className="border-l-[4px] border-[var(--row-border)]"
-      >
-        ...
-      </tr>
-    ))}
-  </tbody>
-</table> */}
 
       </div>
     </LayoutWrapper>

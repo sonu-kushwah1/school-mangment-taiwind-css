@@ -73,17 +73,23 @@ export default function FeesSubmitPage() {
 
       // 👤 Student selected
       if (name === "studentId") {
-        const student = studentList.find((s) => s.id == value);
+        const student = studentList.find(
+          (s) => String(s.id) === String(value)
+        );
 
         if (student) {
           const total = Number(student.fees) || 0;
           const paid = Number(student.paidFees) || 0;
+          const due = Math.max(total - paid, 0);
 
           updated.studentName = `${student.fname} ${student.lname}`;
           updated.className = student.className;
           updated.totalFees = String(total);
           updated.paidFees = String(paid);
-          updated.dueFees = String(total - paid);
+          updated.dueFees = String(due);
+          updated.payAmount = "";
+          // Same as due until user enters pay amount (remaining updates on payAmount change)
+          updated.remainingFees = String(due);
         }
       }
 
@@ -104,19 +110,35 @@ export default function FeesSubmitPage() {
     e.preventDefault();
 
     // ✅ Validation
+    const pay = Number(formData.payAmount);
+    const due = Number(formData.dueFees) || 0;
+
     if (!formData.studentId || !formData.payAmount) {
       toast.error("Please fill all required fields");
       return;
     }
 
+    if (pay <= 0 || pay > due) {
+      toast.error("Pay amount must be greater than 0 and not more than due fees");
+      return;
+    }
+
     try {
+      const prevPaid = Number(formData.paidFees) || 0;
+      const newPaid = prevPaid + pay;
+
+      await axios.patch(
+        `http://localhost:3001/student_list/${formData.studentId}`,
+        { paidFees: String(newPaid) }
+      );
+
       const payload = {
         ...formData,
         totalFees: Number(formData.totalFees),
-        paidFees: Number(formData.paidFees),
+        paidFees: newPaid,
         dueFees: Number(formData.dueFees),
-        payAmount: Number(formData.payAmount),
-        remainingFees: Number(formData.remainingFees)
+        payAmount: pay,
+        remainingFees: Math.max(due - pay, 0)
       };
 
       await axios.post("http://localhost:3001/fees_submit", payload);

@@ -5,8 +5,74 @@ import LayoutWrapper from "@/component/Layout";
 import Breadcrumb from "@/component/Breadcrumb";
 import TableActions from "@/component/TableActions";
 import InputField from "@/component/InputFiled";
+import CommonDataTable from "@/component/DataTable";
+
+type Transport = {
+  id: any;
+  routeName: string;
+  vehicleNumber: string;
+  driverName: string;
+  licenseNumber: string;
+  phoneNumber: string;
+};
+
 
 export default function TransportManager() {
+
+  // ✅ Columns (IMPORTANT: library format)
+  const columns = [
+    {
+      name: "ID",
+      cell: (_: Transport, index: number) => index + 1,
+      width: "80px",
+    },
+    {
+      name: "Route Name",
+      selector: (row: Transport) => row.routeName,
+      sortable: true,
+    },
+    {
+      name: "Vehicle Number",
+      selector: (row: Transport) => row.vehicleNumber,
+      sortable: true,
+    },
+    {
+      name: "Driver Name",
+      selector: (row: Transport) => row.driverName,
+      sortable: true,
+    },
+    {
+      name: "License Number",
+      selector: (row: Transport) => row.licenseNumber,
+      sortable: true,
+    },
+    {
+      name: "Phone Number",
+      selector: (row: Transport) => row.phoneNumber,
+      sortable: true,
+    },
+    {
+      name: "Actions",
+      cell: (transport: Transport) => (
+        <div className="flex items-center gap-2 whitespace-nowrap">
+          <button
+        onClick={() => handleEdit(transport)}
+            className="bg-green-600 text-white px-3 py-1 rounded text-sm"
+          >
+            Edit
+          </button>
+
+          <button
+             onClick={() => handleDelete(transport.id)}
+            className="bg-red-600 text-white px-3 py-1 rounded text-sm"
+          >
+            Delete
+          </button>
+        </div>
+      ),
+    },
+  ];
+
   const API = "http://localhost:3001/transport_list";
 
   const [routeName, setRouteName] = useState("");
@@ -80,7 +146,7 @@ export default function TransportManager() {
   };
 
   // Edit Transport
-  const handleEdit = (item: any) => {
+  const handleEdit = (item: Transport) => {
     setRouteName(item.routeName);
     setVehicleNumber(item.vehicleNumber);
     setDriverName(item.driverName);
@@ -150,49 +216,11 @@ export default function TransportManager() {
 
         {/* Table */}
 
-        <table className="w-full border">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="border p-2">ID</th>
-              <th className="border p-2">Route</th>
-              <th className="border p-2">Vehicle</th>
-              <th className="border p-2">Driver</th>
-              <th className="border p-2">License</th>
-              <th className="border p-2">Phone</th>
-              <th className="border p-2">Action</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {transportList.map((item, index) => (
-              <tr key={item.id}>
-                <td className="border p-2">{index + 1}</td>
-                <td className="border p-2">{item.routeName}</td>
-                <td className="border p-2">{item.vehicleNumber}</td>
-                <td className="border p-2">{item.driverName}</td>
-                <td className="border p-2">{item.licenseNumber}</td>
-                <td className="border p-2">{item.phoneNumber}</td>
-
-                <td className="border p-2 space-x-2">
-              
-                  <button
-                    onClick={() => handleEdit(item)}
-                    className="bg-blue-500 text-white px-3 py-1 rounded"
-                  >
-                    Edit
-                  </button>
-
-                  <button
-                    onClick={() => handleDelete(item.id)}
-                    className="bg-red-500 text-white px-3 py-1 rounded"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <CommonDataTable
+              title="Transport List"
+              data={transportList}
+              columns={columns}
+            />
       </div>
     </LayoutWrapper>
   );

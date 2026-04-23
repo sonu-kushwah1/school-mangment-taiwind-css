@@ -67,9 +67,9 @@ export default function EmployeeList() {
           </thead>
 
           <tbody>
-            {paginatedEmployees.map((emp) => (
+            {paginatedEmployees.map((emp,index) => (
               <tr key={emp.id}>
-                <td className="border p-2">{emp.id}</td>
+                <td className="border p-2">{index+1}</td>
                 <td className="border p-2">
                   {emp.fname}
                 </td>

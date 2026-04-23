@@ -29,3 +29,23 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* thin scrollbar */
+nav {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #9ca3af #f3f4f6;
+}
+
+/* Chrome, Edge, Safari */
+nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+nav::-webkit-scrollbar-track {
+  background: #f3f4f6;
+}
+
+nav::-webkit-scrollbar-thumb {
+  background-color: #9ca3af;
+  border-radius: 10px;
+}
