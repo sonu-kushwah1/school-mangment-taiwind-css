@@ -6,57 +6,57 @@ import { useParams, useRouter } from "next/navigation";
 import LayoutWrapper from "@/component/Layout";
 import Breadcrumb from "@/component/Breadcrumb";
 
-export default function ViewStudent() {
+export default function ViewEmployee() {
   const { id } = useParams();
   const router = useRouter();
 
-  const [student, setStudent] = useState<any>(null);
+  const [employee, setEmployee] = useState<any>(null);
 
   useEffect(() => {
-    const fetchStudent = async () => {
+    const fetchEmployee = async () => {
       try {
-        const res = await axios.get(`http://localhost:5001/api/student/${id}`);
-        setStudent(res.data);
+        const res = await axios.get(`http://localhost:3001/emp_list/${id}`);
+        setEmployee(res.data);
       } catch (error) {
         console.error("Fetch error:", error);
       }
     };
 
-    if (id) fetchStudent();
+    if (id) fetchEmployee();
   }, [id]);
 
-  if (!student) {
+  if (!employee) {
     return <div className="p-6">Loading...</div>;
   }
 
   return (
    <LayoutWrapper>
     <Breadcrumb />
-      <div className="min-h-screen bg-gray-50 flex justify-center p-6">
+      <div className="min-h-screen bg-white flex justify-center p-6">
         <div className="bg-white p-6 rounded shadow w-full max-w-2xl">
-          <h1 className="text-2xl font-bold mb-6 text-center">View Student</h1>
+          <h1 className="text-2xl font-bold mb-6 text-center">View Employee</h1>
 
           <div className="space-y-4">
             <p>
-              <strong>ID:</strong> {student.id}
+              <strong>ID:</strong> {employee.id}
             </p>
             <p>
-              <strong>First Name:</strong> {student.first_name}
+              <strong>First Name:</strong> {employee.fname}
             </p>
             <p>
-              <strong>Last Name:</strong> {student.last_name}
+              <strong>Last Name:</strong> {employee.lname}
             </p>
             <p>
-              <strong>Gender:</strong> {student.gender}
+              <strong>Gender:</strong> {employee.gender}
             </p>
             <p>
-              <strong>Phone:</strong> {student.mob_no}
+              <strong>Phone:</strong> {employee.phone}
             </p>
           </div>
 
           <div className="mt-6 text-center">
             <button
-              onClick={() => router.push("/student")}
+              onClick={() => router.push("/emp")}
               className="bg-blue-600 text-white px-4 py-2 rounded"
             >
               Back to List

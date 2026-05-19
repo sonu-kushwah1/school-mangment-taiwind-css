@@ -16,7 +16,7 @@ const User = () => {
 
   // fetch user function
   const fetchUser = async () => {
-    const res = await axios.get<User[]>("http://localhost:3001/user_list");
+    const res = await axios.get<User[]>("http://localhost:5001/api/user");
     setUser(res.data);
   };
 

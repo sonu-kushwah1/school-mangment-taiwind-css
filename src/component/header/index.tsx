@@ -150,7 +150,7 @@ export default function Navbar({ setSidebarOpen }: any) {
         {/* 🌙 Theme Toggle */}
         <button
           onClick={toggleTheme}
-          className="px-3 py-1 border rounded"
+          className="px-3 py-1 rounded"
         >
           {theme === "light" ? "🌙" : "☀️"}
         </button>

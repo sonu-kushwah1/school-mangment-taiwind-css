@@ -5,7 +5,7 @@ import {
   DndContext,
   closestCenter
 } from "@dnd-kit/core";
-
+import LayoutWrapper from "@/component/Layout";
 import {
   SortableContext,
   useSortable,
@@ -91,41 +91,43 @@ export default function Page() {
   };
 
   return (
-    <div className="p-6">
-      <h2 className="text-xl font-bold mb-4">Drag & Drop Table</h2>
+    <LayoutWrapper>
+      <div className="p-6">
+        <h2 className="text-xl font-bold mb-4">Drag & Drop Table</h2>
 
-      <div className="overflow-x-auto border rounded shadow">
-        <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-          
-          {/* Column Context */}
-          <SortableContext items={columns} strategy={horizontalListSortingStrategy}>
+        <div className="overflow-x-auto border rounded shadow">
+          <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             
-            {/* Row Context */}
-            <SortableContext items={rows.map((r) => r.id)} strategy={verticalListSortingStrategy}>
+            {/* Column Context */}
+            <SortableContext items={columns} strategy={horizontalListSortingStrategy}>
               
-              <table className="min-w-full table-fixed border-collapse">
+              {/* Row Context */}
+              <SortableContext items={rows.map((r) => r.id)} strategy={verticalListSortingStrategy}>
                 
-                <thead>
-                  <tr>
-                    {columns.map((col) => (
-                      <SortableHeader key={col} id={col} class="text-left"/>
+                <table className="min-w-full table-fixed border-collapse">
+                  
+                  <thead>
+                    <tr>
+                      {columns.map((col) => (
+                        <SortableHeader key={col} id={col} class="text-left"/>
+                      ))}
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {rows.map((row) => (
+                      <SortableRow key={row.id} row={row} columns={columns} />
                     ))}
-                  </tr>
-                </thead>
+                  </tbody>
 
-                <tbody>
-                  {rows.map((row) => (
-                    <SortableRow key={row.id} row={row} columns={columns} />
-                  ))}
-                </tbody>
+                </table>
 
-              </table>
-
+              </SortableContext>
             </SortableContext>
-          </SortableContext>
 
-        </DndContext>
+          </DndContext>
+        </div>
       </div>
-    </div>
+    </LayoutWrapper>
   );
 }

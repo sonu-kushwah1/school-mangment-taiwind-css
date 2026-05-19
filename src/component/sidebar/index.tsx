@@ -17,6 +17,7 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
 
   const [studentOpen, setStudentOpen] = useState(false);
   const [empOpen, setEmpOpen] = useState(false);
+  const [empROpen, setREmpOpen] = useState(false);
   const [classOpen, setClassOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
 
@@ -34,7 +35,7 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
         {sidebarOpen ? "Dashboard" : "D"}
       </div>
 
-      <nav className="p-3 space-y-2 ">
+      <nav className="p-3 space-y-2 overflow-y-auto h-[calc(100vh-64px)]">
         {/* Dashboard */}
         <Link
           href="/"
@@ -96,6 +97,13 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
                 <FaBook className="text-[#ffa601]" />
                 Admission Form
               </Link>
+               <Link
+                href="/student/student-list-data"
+                className="flex items-center gap-2 p-2 text-sm rounded hover:bg-[#063d7a]"
+              >
+                <FaBook className="text-[#ffa601]" />
+                Student List Data Table
+              </Link>
               <Link
                 href="/fees/fees-submit"
                 className="flex items-center gap-2 p-2 text-sm rounded hover:bg-[#063d7a]"
@@ -151,6 +159,48 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
                 <FaBook className="text-[#ffa601]" />
                 Employee Pagination
               </Link>
+            </div>
+          )}
+        </div>
+
+         {/* Employee redux*/}
+        <div>
+          <button
+            onClick={() => setREmpOpen((prev) => !prev)}
+            className="w-full flex items-center justify-between p-2 rounded hover:bg-[#063d7a]"
+          >
+            <div className="flex items-center gap-2">
+              <FaUserTie className="text-lg text-[#ffa601]" />
+              {sidebarOpen && "Employee Redux"}
+            </div>
+
+            {/* Arrow Icon */}
+            {sidebarOpen && (
+              <FaChevronDown
+                className={`transition-transform duration-300 ${
+                  empROpen ? "rotate-180" : ""
+                }`}
+              />
+            )}
+          </button>
+
+          {empROpen && sidebarOpen && (
+            <div className="ml-6 mt-2 space-y-1">
+              <Link
+                href="/employee-redux"
+                className="flex items-center gap-2 p-2 text-sm rounded hover:bg-[#063d7a]"
+              >
+                <FaBook className="text-[#ffa601]" />
+                Employee List Redux
+              </Link>
+              <Link
+                href="/emp-page"
+                className="flex items-center gap-2 p-2 text-sm rounded hover:bg-[#063d7a]"
+              >
+                <FaBook className="text-[#ffa601]" />
+                Employee DataTable
+              </Link>
+             
             </div>
           )}
         </div>

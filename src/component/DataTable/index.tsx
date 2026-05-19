@@ -10,22 +10,26 @@ type Props<T> = {
 };
 
 export default function CommonDataTable<T>({
-  data,
+  data = [],
   columns,
   title = "Data Table",
 }: Props<T>) {
+
   const [search, setSearch] = useState("");
 
-  // 🔍 Search filter
-  const filteredData = data.filter((item: any) =>
-    Object.values(item)
-      .join(" ")
-      .toLowerCase()
-      .includes(search.toLowerCase())
-  );
+  // ✅ Safe filter
+  const filteredData = Array.isArray(data)
+    ? data.filter((item: any) =>
+        Object.values(item)
+          .join(" ")
+          .toLowerCase()
+          .includes(search.toLowerCase())
+      )
+    : [];
 
-  // 🎨 Custom styling (fix Tailwind override)
+  // ✅ Table styles
   const customStyles = {
+
     headCells: {
       style: {
         backgroundColor: "#f3f4f6",
@@ -33,6 +37,7 @@ export default function CommonDataTable<T>({
         fontSize: "14px",
       },
     },
+
     rows: {
       style: {
         minHeight: "48px",
@@ -41,33 +46,39 @@ export default function CommonDataTable<T>({
   };
 
   return (
+
     <div className="bg-white p-4 rounded-lg shadow">
 
       {/* Header */}
       <div className="flex justify-between mb-4">
-        <h2 className="text-xl font-bold">{title}</h2>
+
+        <h2 className="text-xl font-bold">
+          {title}
+        </h2>
 
         <input
           type="text"
           placeholder="Search..."
           className="border px-3 py-1 rounded"
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) =>
+            setSearch(e.target.value)
+          }
         />
+
       </div>
 
-      {/* Data Table */}
+      {/* Table */}
       <DataTable
         columns={columns}
         data={filteredData}
-
         pagination
         highlightOnHover
         striped
         responsive
-
         customStyles={customStyles}
       />
+
     </div>
   );
 }

@@ -10,7 +10,7 @@ export default function UserRegistration() {
     phone: "",
     role: "student",
     password: "",
-    confirmPassword: ""
+    // confirmPassword: ""
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -136,7 +136,7 @@ export default function UserRegistration() {
               Confirm Password
             </label>
 
-            <input
+            {/* <input
               type="password"
               name="confirmPassword"
               value={formData.confirmPassword}
@@ -144,7 +144,7 @@ export default function UserRegistration() {
               placeholder="Confirm password"
               className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
               required
-            />
+            /> */}
           </div>
 
           {/* Submit Button */}

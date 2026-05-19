@@ -1,47 +1,85 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+
 import axios from "axios";
-import { useRouter, useParams } from "next/navigation";
+
+import {
+  useParams,
+  useRouter,
+} from "next/navigation";
+
 import LayoutWrapper from "@/component/Layout";
-import { Slide, toast, ToastContainer } from "react-toastify";
+
+import {
+  ToastContainer,
+  toast,
+  Slide,
+} from "react-toastify";
+
 import "react-toastify/dist/ReactToastify.css";
+
 import InputField from "@/component/InputFiled";
 import SelectField from "@/component/selectFiled";
-import Breadcrumb from "@/component/Breadcrumb";
 import Button from "@/component/Button";
 
 export default function EditStudent() {
 
   const router = useRouter();
-  const params = useParams();
-  const id = params.id;
 
+  const params = useParams();
+
+  // ✅ Fix ID issue
+  const id = Array.isArray(params.id)
+    ? params.id[0]
+    : params.id;
+
+  // ✅ Fees List
   const [feesList, setFeesList] = useState<any[]>([]);
 
+  // ✅ Loading
+  const [loading, setLoading] = useState(true);
+
+  // ✅ Form Data
   const [formData, setFormData] = useState({
-    fname: "",
-    lname: "",
+     first_name: "",
+    last_name: "",
     gender: "male",
-    phone: "",
+    mob_no: "",
     dob: "",
-    bloodGroup: "A+",
+    blood_group: "A+",
     religion: "Hindu",
+    class_name: "",
     email: "",
-    className: "",
     section: "A",
     fees: ""
   });
 
-  // Fetch fees list
+  // ✅ Fetch Fees
   useEffect(() => {
 
     const fetchFees = async () => {
+
       try {
-        const res = await axios.get("http://localhost:3001/fees_list");
-        setFeesList(res.data);
+
+        const res = await axios.get(
+          "http://localhost:5001/api/fees"
+        );
+
+        console.log("FEES RESPONSE:", res.data);
+
+        const feesData = Array.isArray(res.data)
+          ? res.data
+          : res.data.data || [];
+
+        setFeesList(feesData);
+
       } catch (error) {
-        console.error(error);
+
+        console.error("Fees Fetch Error:", error);
+
+        toast.error("Failed to fetch fees");
+
       }
     };
 
@@ -49,199 +87,301 @@ export default function EditStudent() {
 
   }, []);
 
-  // Fetch student data
+  // ✅ Fetch Student By ID
   useEffect(() => {
 
+    if (!id) return;
+
     const fetchStudent = async () => {
+
       try {
 
+        setLoading(true);
+
         const res = await axios.get(
-          `http://localhost:3001/student_list/${id}`
+          `http://localhost:5001/api/student/${id}`
         );
 
-        setFormData(res.data);
+        console.log("STUDENT RESPONSE:", res.data);
 
-      } catch (error) {
-        console.error(error);
-        toast.error("Failed to load student");
+        // ✅ Handle multiple API structures
+        const studentData =
+          res.data.data ||
+          res.data.student ||
+          res.data;
+
+        setFormData({
+          first_name: studentData.first_name || "",
+          last_name: studentData.last_name || "",
+          gender: studentData.gender || "male",
+          mob_no: studentData.mob_no || "",
+          dob: studentData.dob
+            ? studentData.dob.split("T")[0]
+            : "",
+          blood_group:
+            studentData.blood_group || "A+",
+          religion:
+            studentData.religion || "Hindu",
+          email: studentData.email || "",
+          class_name:
+            studentData.class_name || "",
+          section: studentData.section || "A",
+          fees: studentData.fees || "",
+        });
+
+      } catch (error: any) {
+
+        console.error(
+          "Student Fetch Error:",
+          error
+        );
+
+        toast.error("Failed to fetch student");
+
+      } finally {
+
+        setLoading(false);
+
       }
     };
 
-    if (id) fetchStudent();
+    fetchStudent();
 
   }, [id]);
 
-  // Handle change
+  // ✅ Handle Input Change
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement
+    >
   ) => {
 
     const { name, value } = e.target;
 
-    if (name === "className") {
+    // ✅ Auto Update Fees
+    if (name === "class_name") {
 
       const selectedClass = feesList.find(
-        (item) => item.className === value
+        (item) =>
+          item.className === value
       );
 
       setFormData((prev) => ({
         ...prev,
-        className: value,
-        fees: selectedClass ? selectedClass.fees : ""
+        class_name: value,
+        fees: selectedClass
+          ? selectedClass.fees
+          : "",
       }));
 
     } else {
 
       setFormData((prev) => ({
         ...prev,
-        [name]: value
+        [name]: value,
       }));
 
     }
-
   };
 
-  // Update student
-  const handleSubmit = async (e: React.FormEvent) => {
+  // ✅ Update Student
+  const handleSubmit = async (
+    e: React.FormEvent
+  ) => {
 
     e.preventDefault();
 
+    if (!id) {
+
+      toast.error("Student ID not found");
+
+      return;
+    }
+
     try {
 
-      await axios.put(
-        `http://localhost:3001/student_list/${id}`,
+      const res = await axios.put(
+        `http://localhost:5001/api/student/${id}`,
         formData
       );
 
-      toast.success("Student Updated Successfully");
+      console.log(
+        "UPDATE RESPONSE:",
+        res.data
+      );
+
+      toast.success(
+        "Student Updated Successfully"
+      );
 
       setTimeout(() => {
+
         router.push("/student");
+
       }, 1500);
 
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to update student");
-    }
+    } catch (error: any) {
 
+      console.error(
+        "Update Error:",
+        error
+      );
+
+      toast.error("Failed to update student");
+
+    }
   };
 
   return (
     <LayoutWrapper>
-      <Breadcrumb/>
-      <div className="min-h-screen bg-gray-50 flex justify-center items-start p-6">
 
-        <div className="bg-white p-6 rounded shadow w-full max-w-3xl">
+      <div className="min-h-screen bg-gray-100 flex justify-center items-start p-6">
 
-          <h1 className="text-2xl font-bold mb-6 text-center">
+        <div className="bg-white shadow-lg rounded-xl w-full max-w-4xl p-6">
+
+          <h1 className="text-2xl font-bold text-center mb-6">
             Edit Student
           </h1>
 
-          <form
-            onSubmit={handleSubmit}
-            className="grid grid-cols-1 md:grid-cols-2 gap-4"
-          >
+          {loading ? (
 
-            <InputField
-              label="First Name"
-              name="fname"
-              value={formData.fname}
-              onChange={handleChange}
-              required
-            />
-
-            <InputField
-              label="Last Name"
-              name="lname"
-              value={formData.lname}
-              onChange={handleChange}
-              required
-            />
-
-            <SelectField
-              label="Gender"
-              name="gender"
-              value={formData.gender}
-              onChange={handleChange}
-              options={[
-                { label: "Male", value: "male" },
-                { label: "Female", value: "female" },
-                { label: "Other", value: "other" }
-              ]}
-            />
-
-            <InputField
-              label="Dob"
-              name="dob"
-              type="date"
-              value={formData.dob}
-              onChange={handleChange}
-              required
-            />
-
-            <InputField
-              label="Phone"
-              name="phone"
-              type="number"
-              value={formData.phone}
-              onChange={handleChange}
-              required
-            />
-
-            <InputField
-              label="Email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-
-            {/* Class dropdown */}
-            <SelectField
-              label="Class"
-              name="className"
-              value={formData.className}
-              onChange={handleChange}
-              options={feesList.map((item) => ({
-                label: item.className,
-                value: item.className
-              }))}
-            />
-
-            {/* Fees auto fill */}
-            <InputField
-              label="Fees"
-              name="fees"
-              type="number"
-              value={formData.fees}
-              disabled
-            />
-
-            <SelectField
-              label="Section"
-              name="section"
-              value={formData.section}
-              onChange={handleChange}
-              options={[
-                { label: "Section A", value: "A" },
-                { label: "Section B", value: "B" },
-                { label: "Section C", value: "C" }
-              ]}
-            />
-
-            <div className="md:col-span-2 mt-4">
-              <Button
-                label="Update Student"
-                type="submit"
-                className="w-full"
-              />
+            <div className="text-center py-10">
+              Loading student data...
             </div>
 
-          </form>
+          ) : (
 
+            <form
+              onSubmit={handleSubmit}
+              className="grid grid-cols-1 md:grid-cols-2 gap-4"
+            >
+
+              <InputField
+                label="First Name"
+                name="first_name"
+                value={formData.first_name}
+                onChange={handleChange}
+                required
+              />
+
+              <InputField
+                label="Last Name"
+                name="last_name"
+                value={formData.last_name}
+                onChange={handleChange}
+                required
+              />
+
+              <SelectField
+                label="Gender"
+                name="gender"
+                value={formData.gender}
+                onChange={handleChange}
+                options={[
+                  {
+                    label: "Male",
+                    value: "male",
+                  },
+                  {
+                    label: "Female",
+                    value: "female",
+                  },
+                  {
+                    label: "Other",
+                    value: "other",
+                  },
+                ]}
+              />
+
+              <InputField
+                label="DOB"
+                name="dob"
+                type="date"
+                value={formData.dob}
+                onChange={handleChange}
+                required
+              />
+
+              <InputField
+                label="Phone"
+                name="mob_no"
+                type="number"
+                value={formData.mob_no}
+                onChange={handleChange}
+                required
+              />
+
+              <InputField
+                label="Email"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+
+              {/* ✅ Class Dropdown */}
+              <SelectField
+                label="Class"
+                name="class_name"
+                value={formData.class_name}
+                onChange={handleChange}
+                options={
+                  Array.isArray(feesList)
+                    ? feesList.map((item) => ({
+                        label: item.className,
+                        value: item.className,
+                      }))
+                    : []
+                }
+              />
+
+              {/* ✅ Fees */}
+              <InputField
+                label="Fees"
+                name="fees"
+                type="number"
+                value={formData.fees}
+                disabled
+              />
+
+              {/* ✅ Section */}
+              <SelectField
+                label="Section"
+                name="section"
+                value={formData.section}
+                onChange={handleChange}
+                options={[
+                  {
+                    label: "Section A",
+                    value: "A",
+                  },
+                  {
+                    label: "Section B",
+                    value: "B",
+                  },
+                  {
+                    label: "Section C",
+                    value: "C",
+                  },
+                ]}
+              />
+
+              {/* ✅ Submit Button */}
+              <div className="md:col-span-2 mt-4">
+
+                <Button
+                  label="Update Student"
+                  type="submit"
+                  className="w-full"
+                />
+
+              </div>
+
+            </form>
+
+          )}
         </div>
-
       </div>
 
       <ToastContainer

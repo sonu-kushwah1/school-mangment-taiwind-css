@@ -17,5 +17,5 @@ export type Student = {
   email: string;
   class: string;
   section: string;
-   fees: string;
+  fees: string;
 };

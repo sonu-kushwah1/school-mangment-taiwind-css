@@ -13,14 +13,15 @@ export default function DashboardPage() {
   const [totalUsers, setTotalUsers] = useState(0);
   const [activeUsers, setActiveUsers] = useState(0);
 
-  const studentAPI = api.studentList;
-  const employeeAPI = api.empList;
+  const studentAPI = "http://localhost:5001/api/student";
+  const employeeAPI = "http://localhost:5001/api/employee";
   const USERS_API = "http://localhost:5000/users"; // 🔥 users API
 
   // Fetch Students
   const getStudents = async () => {
     try {
       const res = await axios.get(studentAPI);
+      console.log("students", res.data);
       setStudents(res.data.length);
     } catch (error) {
       console.error("Error fetching students:", error);

@@ -32,7 +32,7 @@ const CreateUser = () => {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:3001/user_list", formData);
+      await axios.post("http://localhost:5001/api/user", formData);
 
       alert("User Created Successfully");
 

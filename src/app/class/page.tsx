@@ -1,143 +1,282 @@
 "use client";
-import { api } from "@/api";
+
 import { useEffect, useState } from "react";
+import axios from "axios";
+
 import LayoutWrapper from "@/component/Layout";
 import Breadcrumb from "@/component/Breadcrumb";
-import { getRandomBorderColor } from "@/utils/randomColor";
 import InputField from "@/component/InputFiled";
-import axios from "axios";
 
 export default function ClassManager() {
 
-  const [color] = useState(getRandomBorderColor());
+  // ✅ API URL
+  const API = "http://localhost:5001/api/class";
 
-  const API = api.classList;
-
+  // ✅ States
   const [classInput, setClassInput] = useState("");
+
   const [classes, setClasses] = useState<any[]>([]);
+
   const [editId, setEditId] = useState<number | null>(null);
 
-  // ✅ Fetch Classes (Axios)
+  // ✅ Fetch Classes
   const fetchClasses = async () => {
-    try {
-      const res = await axios.get(API);
-      setClasses(res.data);
-    } catch (error) {
-      console.error("Error fetching classes:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchClasses();
-  }, []);
-
-  // ✅ Add or Update Class (Axios)
-  const handleAddClass = async () => {
-    if (!classInput) return;
 
     try {
-      if (editId) {
-        await axios.put(`${API}/${editId}`, {
-          name: classInput,
-        });
-        setEditId(null);
+
+      const response = await axios.get(API);
+
+      console.log("FETCH RESPONSE:", response.data);
+
+      // ✅ Backend response support
+      if (response.data.data) {
+
+        setClasses(response.data.data);
+
       } else {
-        await axios.post(API, {
-          name: classInput,
-        });
+
+        setClasses(response.data);
+
       }
 
-      setClassInput("");
-      fetchClasses();
     } catch (error) {
-      console.error("Error saving class:", error);
+
+      console.log("FETCH ERROR:", error);
+
     }
   };
 
-  // ✅ Delete Class (Axios)
-  const handleDelete = async (id: number) => {
+  // ✅ Load Classes
+  useEffect(() => {
+
+    fetchClasses();
+
+  }, []);
+
+  // ✅ Add / Update Class
+  const handleAddClass = async () => {
+
+    if (!classInput.trim()) {
+
+      alert("Please enter class name");
+
+      return;
+    }
+
     try {
-      await axios.delete(`${API}/${id}`);
+
+      // ✅ UPDATE
+      if (editId !== null) {
+
+        await axios.put(`${API}/${editId}`, {
+          className: classInput,
+        });
+
+        alert("Class updated successfully");
+
+        setEditId(null);
+
+      }
+
+      // ✅ CREATE
+      else {
+
+        await axios.post(API, {
+          className: classInput,
+        });
+
+        alert("Class added successfully");
+
+      }
+
+      // ✅ Reset
+      setClassInput("");
+
+      // ✅ Refresh List
       fetchClasses();
+
     } catch (error) {
-      console.error("Error deleting class:", error);
+
+      console.log("SAVE ERROR:", error);
+
+      alert("Something went wrong");
+
     }
   };
 
-  // Edit Class
+  // ✅ Delete Class
+  const handleDelete = async (id: number) => {
+
+    const confirmDelete = confirm(
+      "Are you sure you want to delete?"
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+
+      await axios.delete(`${API}/${id}`);
+
+      alert("Class deleted successfully");
+
+      fetchClasses();
+
+    } catch (error) {
+
+      console.log("DELETE ERROR:", error);
+
+      alert("Delete failed");
+
+    }
+  };
+
+  // ✅ Edit Class
   const handleEdit = (cls: any) => {
-    setClassInput(cls.name);
+
+    setClassInput(cls.className);
+
     setEditId(cls.id);
+
   };
 
   return (
+
     <LayoutWrapper>
+
       <Breadcrumb />
-      <div className="bg-white p-6 rounded shadow">
 
-        <h2 className="text-xl font-semibold mb-6">Class Manager</h2>
+      <div className="bg-white p-6 rounded-lg shadow-md">
 
-        {/* Add Class */}
+        {/* Header */}
+        <div className="flex justify-between items-center mb-6">
+
+          <h2 className="text-2xl font-bold">
+            Class Manager
+          </h2>
+
+        </div>
+
+        {/* Input Section */}
         <div className="flex gap-4 mb-6">
-          
-          <InputField
-            type="text"
-            placeholder="Enter Class"
-            value={classInput}
-            onChange={(e) => setClassInput(e.target.value)}
-          />
+
+          <div className="flex-1">
+
+            <InputField
+              type="text"
+              placeholder="Enter Class Name"
+              value={classInput}
+              onChange={(e) =>
+                setClassInput(e.target.value)
+              }
+            />
+
+          </div>
 
           <button
             onClick={handleAddClass}
-            className="bg-yellow-500 text-white px-4 py-2 rounded"
+            className={`px-5 py-2 rounded text-white font-medium ${
+              editId !== null
+                ? "bg-blue-500"
+                : "bg-yellow-500"
+            }`}
           >
-            {editId ? "Update Class" : "Add Class"}
+            {editId !== null
+              ? "Update Class"
+              : "Add Class"}
           </button>
+
         </div>
 
         {/* Table */}
-        <table
-          className="w-full border"
-          style={{ "--row-border": color } as React.CSSProperties}
-        >
-          <thead className="bg-gray-100">
-            <tr className="border-l-[5px] border-[var(--row-border)]">
-              <th className="border p-2 text-left">ID</th>
-              <th className="border p-2 text-left">Class Name</th>
-              <th className="border p-2 text-left">Actions</th>
-            </tr>
-          </thead>
+        <div className="overflow-x-auto">
 
-          <tbody>
-            {classes.map((cls, index) => (
-              <tr
-                className="bg-white border-l-[5px] border-[var(--row-border)]"
-                key={cls.id}
-              >
-                <td className="border p-2">{index + 1}</td>
-                <td className="border p-2">{cls.name}</td>
+          <table className="w-full border-collapse border">
 
-                <td className="border p-2 space-x-2">
-                  <button
-                    onClick={() => handleEdit(cls)}
-                    className="bg-blue-500 text-white px-3 py-1 rounded"
-                  >
-                    Edit
-                  </button>
+            <thead className="bg-gray-100">
 
-                  <button
-                    onClick={() => handleDelete(cls.id)}
-                    className="bg-red-500 text-white px-3 py-1 rounded"
-                  >
-                    Delete
-                  </button>
-                </td>
+              <tr>
+
+                <th className="border p-3 text-left">
+                  #
+                </th>
+
+                <th className="border p-3 text-left">
+                  Class Name
+                </th>
+
+                <th className="border p-3 text-left">
+                  Actions
+                </th>
+
               </tr>
-            ))}
-          </tbody>
-        </table>
+
+            </thead>
+
+            <tbody>
+
+              {classes.length > 0 ? (
+
+                classes.map((cls, index) => (
+
+                  <tr key={cls.id}>
+
+                    <td className="border p-3">
+                      {index + 1}
+                    </td>
+
+                    <td className="border p-3">
+                      {cls.className}
+                    </td>
+
+                    <td className="border p-3 space-x-2">
+
+                      <button
+                        onClick={() =>
+                          handleEdit(cls)
+                        }
+                        className="bg-blue-500 text-white px-3 py-1 rounded"
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          handleDelete(cls.id)
+                        }
+                        className="bg-red-500 text-white px-3 py-1 rounded"
+                      >
+                        Delete
+                      </button>
+
+                    </td>
+
+                  </tr>
+
+                ))
+
+              ) : (
+
+                <tr>
+
+                  <td
+                    colSpan={3}
+                    className="text-center p-4"
+                  >
+                    No Classes Found
+                  </td>
+
+                </tr>
+
+              )}
+
+            </tbody>
+
+          </table>
+
+        </div>
 
       </div>
+
     </LayoutWrapper>
   );
 }

@@ -58,37 +58,27 @@ export default function StudentList() {
   // ✅ Columns (IMPORTANT: library format)
   const columns = [
     {
-      name: "Student ID",
+      name: "ID",
       cell: (_: Student, index: number) => index + 1,
       width: "80px",
     },
     {
-      name: "Student Name",
+      name: "First Name",
       selector: (row: Student) => row.first_name,
       sortable: true,
     },
     {
-      name: "Students Class",
+      name: "Last Name",
       selector: (row: Student) => row.last_name,
       sortable: true,
     },
     {
-      name: "Total Fees",
+      name: "email",
       selector: (row: Student) => row.email,
       sortable: true,
     },
     {
-      name: "Due Fees",
-      selector: (row: Student) => row.mob_no,
-      sortable: true,
-    },
-    {
-      name: "Paid Fees",
-      selector: (row: Student) => row.mob_no,
-      sortable: true,
-    },
-    {
-      name: "Payment Method",
+      name: "Mobile",
       selector: (row: Student) => row.mob_no,
       sortable: true,
     },
@@ -128,7 +118,7 @@ export default function StudentList() {
       <div className="bg-white p-6 rounded shadow">
         {/* Header */}
         <div className="flex justify-between mb-4">
-          <h1 className="text-2xl font-bold">Student Fees Record</h1>
+          <h1 className="text-2xl font-bold">Student List</h1>
 
           <button
             onClick={() => router.push("/student/create")}

@@ -2,10 +2,23 @@
   "emp_list": [
     {
       "id": "1",
-      "fname": "Satendra",
-      "lname": "Dhakad",
-      "gender": "male",
-      "phone": "9977696218"
+      "data": {
+        "fname": "Sonu",
+        "lname": "Kushwah",
+        "gender": "male",
+        "phone": "9977696219",
+        "email": "snssystem.sonu.kushwah@gmail.com",
+        "department": "",
+        "designation": "",
+        "salary": "20000",
+        "address": "Anand Nagar Bhodapur Gwalior (M.P)"
+      },
+      "fname": "Chatur",
+      "lname": "Sahu",
+      "email": "chatur@gmail.com",
+      "address": "Patel Nagar",
+      "salary": "5000",
+      "phone": "08358957395"
     },
     {
       "id": "ca46",
@@ -60,6 +73,18 @@
       "department": "HR",
       "salary": "25000",
       "designation": "Account"
+    },
+    {
+      "id": "f2ba",
+      "fname": "Priyanka",
+      "lname": "sharma",
+      "gender": "female",
+      "phone": "08358957395",
+      "email": "snssystem.sonu.kushwah@gmail.com",
+      "department": "HR",
+      "designation": "Manager",
+      "salary": "22000",
+      "address": "Anand Nagar Bhodapur Gwalior (M.P)"
     }
   ],
   "student_list": [
@@ -302,6 +327,21 @@
       "className": "Class 6",
       "fees": "24500",
       "id": "795a"
+    },
+    {
+      "id": "6d4e",
+      "classId": "1",
+      "fees": "12000"
+    },
+    {
+      "id": "5e27",
+      "classId": "1",
+      "fees": "12000"
+    },
+    {
+      "id": "43a4",
+      "classId": "1",
+      "fees": "12000"
     }
   ],
   "transport_list": [
