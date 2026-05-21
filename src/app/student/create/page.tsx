@@ -268,7 +268,7 @@ export default function CreateEmployee() {
             <InputField
               label="Phone"
               name="mob_no"
-              type="text"
+              type="number"
               value={formData.mob_no}
               onChange={handleChange}
               required
