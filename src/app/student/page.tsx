@@ -134,6 +134,7 @@ export default function StudentList() {
           title="Student List"
           data={students}
           columns={columns}
+          
         />
       </div>
 
