@@ -7,16 +7,16 @@ import { useRouter } from "next/navigation";
 import LayoutWrapper from "@/component/Layout";
 import Breadcrumb from "@/component/Breadcrumb";
 import CommonDataTable from "@/component/DataTable";
-import { api } from "@/api";
+import { getAuthToken } from "@/utils/auth";
 
 import { Slide, toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// import "react-toastify/dist/ReactToastify.css";
 
 type Student = {
   id: string;
   fname: string;
   email: string;
-  phone:string;
+  phone: string;
   role: string;
 };
 
@@ -24,16 +24,19 @@ export default function StudentList() {
   const [students, setStudents] = useState<Student[]>([]);
   const router = useRouter();
 
- const studentUrl =
-    "localhost:5001/api/auth/users";
+  const studentUrl =
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_AUTH_API}/users`;
 
   // ✅ Fetch
   const fetchStudents = async () => {
     try {
-      const res = await axios.get(studentUrl);
+      const token = getAuthToken();
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      const res = await axios.get(studentUrl, { headers });
       console.log("user data api", res.data);
       setStudents(res.data);
-    } catch {
+    } catch (err) {
+      console.error("Fetch users error:", err);
       toast.error("Failed to fetch students");
     }
   };
@@ -47,10 +50,13 @@ export default function StudentList() {
     if (!confirm("Delete this student?")) return;
 
     try {
-      await axios.delete(`${studentUrl}/${id}`);
+      const token = getAuthToken();
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      await axios.delete(`${studentUrl}/${id}`, { headers });
       toast.success("Deleted successfully");
       fetchStudents();
-    } catch {
+    } catch (err) {
+      console.error("Delete user error:", err);
       toast.error("Delete failed");
     }
   };

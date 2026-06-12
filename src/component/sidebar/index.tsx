@@ -97,13 +97,7 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
                 <FaBook className="text-[#ffa601]" />
                 Admission Form
               </Link>
-               <Link
-                href="/student/student-list-data"
-                className="flex items-center gap-2 p-2 text-sm rounded hover:bg-[#063d7a]"
-              >
-                <FaBook className="text-[#ffa601]" />
-                Student List Data Table
-              </Link>
+              
               <Link
                 href="/fees/fees-submit"
                 className="flex items-center gap-2 p-2 text-sm rounded hover:bg-[#063d7a]"
@@ -378,28 +372,8 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
 
           {sidebarOpen && "Roles Permission"}
         </Link>
-        {/* User Managment */}
-        <Link
-          href="/user-managment"
-          className={`flex items-center p-2 rounded hover:bg-[#063d7a] ${
-            pathname === "/user-managment" ? activeClass : ""
-          }`}
-        >
-          <FaUser className={iconClass} />
-
-          {sidebarOpen && "user-managment"}
-        </Link>
-        {/* User Role */}
-        <Link
-          href="/roles-permission"
-          className={`flex items-center p-2 rounded hover:bg-[#063d7a] ${
-            pathname === "/roles-permission" ? activeClass : ""
-          }`}
-        >
-          <FaUser className={iconClass} />
-
-          {sidebarOpen && "Roles Permission"}
-        </Link>
+        
+     
         
      
       </nav>
