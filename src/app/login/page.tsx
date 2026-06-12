@@ -1,13 +1,19 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { FiEye, FiEyeOff } from "react-icons/fi";
+import { setAuthToken } from "@/utils/auth";
 
 export default function LoginPage() {
+  const router = useRouter();
 
   const [formData, setFormData] = useState({
     email: "",
-    password: ""
+    password: "",
   });
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -17,7 +23,7 @@ export default function LoginPage() {
 
     setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -28,13 +34,19 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const res = await fetch("http://localhost:5000/login", { // 🔥 API
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(formData)
-      });
+      const res = await fetch(
+        "http://localhost:5001/api/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: formData.email,
+            password: formData.password,
+          }),
+        }
+      );
 
       const data = await res.json();
 
@@ -44,14 +56,17 @@ export default function LoginPage() {
 
       console.log("Login Success:", data);
 
-      // 👉 optional: token save
       if (data.token) {
-        localStorage.setItem("token", data.token);
+        setAuthToken(data.token);
       }
 
-      // 👉 redirect to dashboard
-      window.location.href = "/";
+      // Save user data
+      if (data.user) {
+        localStorage.setItem("user", JSON.stringify(data.user));
+      }
 
+      // Redirect after successful login
+      router.push("/");
     } catch (err: any) {
       setError(err.message || "Something went wrong");
     } finally {
@@ -60,17 +75,13 @@ export default function LoginPage() {
   };
 
   return (
-
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
       <div className="bg-white shadow-xl rounded-xl p-8 w-full max-w-md">
-
         <h2 className="text-2xl font-bold text-center mb-6">
           Student Management Login
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-
           {/* Email */}
           <div>
             <label className="block text-sm font-medium mb-1">
@@ -89,60 +100,80 @@ export default function LoginPage() {
           </div>
 
           {/* Password */}
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Password
-            </label>
+       
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Password
+              </label>
 
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Enter password"
-              className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
-              required
-            />
-          </div>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Enter password"
+                  className="w-full border rounded-md px-3 py-2 pr-10 focus:ring-2 focus:ring-blue-500 outline-none"
+                  required
+                />
 
-          {/* Error */}
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                >
+                  {showPassword ? (
+                    <FiEyeOff size={18} />
+                  ) : (
+                    <FiEye size={18} />
+                  )}
+                </button>
+              </div>
+            </div>
+
+          {/* Error Message */}
           {error && (
-            <p className="text-red-500 text-sm">{error}</p>
+            <div className="bg-red-100 text-red-700 p-3 rounded-md text-sm">
+              {error}
+            </div>
           )}
 
-          {/* Remember + Forgot */}
-          <div className="flex justify-between text-sm">
+          {/* Remember Me + Forgot Password */}
+          <div className="flex justify-between items-center text-sm">
             <label className="flex items-center gap-2">
               <input type="checkbox" />
               Remember me
             </label>
 
-            <a href="#" className="text-blue-600 hover:underline">
+            <a
+              href="/forgot-password"
+              className="text-blue-600 hover:underline"
+            >
               Forgot Password?
             </a>
           </div>
 
-          {/* Button */}
+          {/* Login Button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
-
         </form>
 
         {/* Register Link */}
-        <p className="text-center text-sm mt-4">
+        <p className="text-center text-sm mt-6">
           Don't have an account?
-          <a href="/signup" className="text-blue-600 ml-1 hover:underline">
+          <a
+            href="/signup"
+            className="text-blue-600 ml-1 hover:underline"
+          >
             Sign Up
           </a>
         </p>
-
       </div>
-
     </div>
   );
 }

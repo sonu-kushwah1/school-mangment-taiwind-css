@@ -16,7 +16,11 @@ import { api } from "@/api";
 
 
 export default function EmployeeList() {
-  const API = api.studentList;
+
+ const studentUrl =
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_STUDENT_API}`;
+
+  // const API = api.studentList;
 
   const [students, setStudents] = useState<Student[]>([]);
 
@@ -32,7 +36,7 @@ export default function EmployeeList() {
 
   // Fetch Data
   const fetchEmployees = async () => {
-    const res = await axios.get<Student[]>(API);
+    const res = await axios.get<Student[]>(studentUrl);
     setStudents(res.data);
   };
 
@@ -73,7 +77,7 @@ const filteredStudents = students.filter((item) =>
   const handleDelete = async (student_id: string) => {
     if (!confirm("Are you sure you want to delete this student?")) return;
 
-    await axios.delete(`${API}/${student_id}`);
+    await axios.delete(`${studentUrl}/${student_id}`);
     toast.success("Student Deleted Successfully");
     fetchEmployees();
   };

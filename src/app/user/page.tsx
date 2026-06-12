@@ -1,73 +1,147 @@
 "use client";
 
 import axios from "axios";
-import Breadcrumb from "@/component/Breadcrumb";
-import LayoutWrapper from "@/component/Layout";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { User } from "@/types/user";
-import React, { useState } from "react";
 
-const User = () => {
+import LayoutWrapper from "@/component/Layout";
+import Breadcrumb from "@/component/Breadcrumb";
+import CommonDataTable from "@/component/DataTable";
+import { api } from "@/api";
+
+import { Slide, toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+type Student = {
+  id: string;
+  fname: string;
+  email: string;
+  phone:string;
+  role: string;
+};
+
+export default function StudentList() {
+  const [students, setStudents] = useState<Student[]>([]);
   const router = useRouter();
 
-  // state with type
-  const [user, setUser] = React.useState<User[]>([]);
-  const [name, setName] = useState([]);
+ const studentUrl =
+    "localhost:5001/api/auth/users";
 
-  // fetch user function
-  const fetchUser = async () => {
-    const res = await axios.get<User[]>("http://localhost:5001/api/user");
-    setUser(res.data);
+  // ✅ Fetch
+  const fetchStudents = async () => {
+    try {
+      const res = await axios.get(studentUrl);
+      console.log("user data api", res.data);
+      setStudents(res.data);
+    } catch {
+      toast.error("Failed to fetch students");
+    }
   };
 
-  // run on component load
-  React.useEffect(() => {
-    fetchUser();
+  useEffect(() => {
+    fetchStudents();
   }, []);
+
+  // ✅ Delete
+  const handleDelete = async (id: string) => {
+    if (!confirm("Delete this student?")) return;
+
+    try {
+      await axios.delete(`${studentUrl}/${id}`);
+      toast.success("Deleted successfully");
+      fetchStudents();
+    } catch {
+      toast.error("Delete failed");
+    }
+  };
+
+  // ✅ Columns (IMPORTANT: library format)
+  const columns = [
+    {
+      name: "ID",
+      cell: (_: Student, index: number) => index + 1,
+      width: "80px",
+    },
+    {
+      name: "Name",
+      selector: (row: Student) => row.fname,
+      sortable: true,
+    },
+    {
+      name: "Email",
+      selector: (row: Student) => row.email,
+      sortable: true,
+    },
+    {
+      name: "Phone",
+      selector: (row: Student) => row.phone,
+      sortable: true,
+    },
+    {
+      name: "Role",
+      selector: (row: Student) => row.role,
+      sortable: true,
+    },
+    {
+      name: "Actions",
+      cell: (student: Student) => (
+        <div className="flex items-center gap-2 whitespace-nowrap">
+          <button
+            onClick={() => router.push(`/student/edit/${student.id}`)}
+            className="bg-green-600 text-white px-3 py-1 rounded text-sm"
+          >
+            Edit
+          </button>
+
+          <button
+            onClick={() => router.push(`/student/view/${student.id}`)}
+            className="bg-gray-600 text-white px-3 py-1 rounded text-sm"
+          >
+            View
+          </button>
+
+          <button
+            onClick={() => handleDelete(student.id)}
+            className="bg-red-600 text-white px-3 py-1 rounded text-sm"
+          >
+            Delete
+          </button>
+        </div>
+      ),
+    },
+  ];
 
   return (
     <LayoutWrapper>
-    
       <Breadcrumb />
-      <button
-        onClick={() => router.push("/user/create")}
-        className="bg-green-600 text-white px-4 py-2 rounded"
-      >
-        Add New Emp
-      </button>
-      <table className="border border-gray-300 w-full">
-        <thead>
-          <tr>
-            <th className="border px-4 py-2">Id</th>
-            <th className="border px-4 py-2">Name</th>
-            <th className="border px-4 py-2">Email</th>
-            <th className="border px-4 py-2">Phone</th>
-            <th className="border px-4 py-2">Action</th>
-          </tr>
-        </thead>
 
-        <tbody>
-          {user.map((item, index) => (
-            <tr key={index}>
-              <td className="border px-4 py-2">{index + 1}</td>
-              <td className="border px-4 py-2">{item.name}</td>
-              <td className="border px-4 py-2">{item.email}</td>
-              <td className="border px-4 py-2">{item.phone}</td>
-              <td className="border px-4 py-2">
-                <button className="bg-blue-500 text-white px-2 py-1 rounded">
-                  Edit
-                </button>
+      <div className="bg-white p-6 rounded shadow">
+        {/* Header */}
+        <div className="flex justify-between mb-4">
+          <h1 className="text-2xl font-bold">User List</h1>
 
-                <button className="bg-red-500 text-white px-2 py-1 rounded ml-2">
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+          <button
+            onClick={() => router.push("/user/create")}
+            className="bg-green-600 text-white px-4 py-2 rounded"
+          >
+            Add New User
+          </button>
+        </div>
+
+        {/* ✅ Correct Table */}
+        <CommonDataTable
+          title="User List"
+          data={students}
+          columns={columns}
+        />
+      </div>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        transition={Slide}
+        theme="colored"
+      />
     </LayoutWrapper>
   );
-};
-
-export default User;
+}

@@ -4,6 +4,7 @@ import { ReactNode, useState } from "react";
 import Navbar from "@/component/header";
 import Sidebar from "@/component/sidebar";
 import Footer from "@/component/footer";
+import ProtectedRoute from "@/component/ProtectedRoute";
 
 interface PageLayoutProps {
   children: ReactNode;
@@ -13,27 +14,28 @@ const LayoutWrapper = ({ children }: PageLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
-    <div className="min-h-screen bg-gray-100"  style={{
-        backgroundColor: "var(--bg-color)",
-        color: "var(--text-color)",
-      }}>
-
-      <Sidebar sidebarOpen={sidebarOpen} />
-
+    <ProtectedRoute>
       <div
-        className={`flex flex-col min-h-screen transition-all duration-300
-        ${sidebarOpen ? "lg:ml-64" : "lg:ml-16"}`}
+        className="min-h-screen bg-gray-100"
+        style={{
+          backgroundColor: "var(--bg-color)",
+          color: "var(--text-color)",
+        }}
       >
-        <Navbar setSidebarOpen={setSidebarOpen} />
+        <Sidebar sidebarOpen={sidebarOpen} />
 
-        <main className="flex-1 p-6 mt-16">
-          {children}
-        </main>
+        <div
+          className={`flex flex-col min-h-screen transition-all duration-300
+        ${sidebarOpen ? "lg:ml-64" : "lg:ml-16"}`}
+        >
+          <Navbar setSidebarOpen={setSidebarOpen} />
 
-        <Footer />
+          <main className="flex-1 p-6 mt-16">{children}</main>
+
+          <Footer />
+        </div>
       </div>
-
-    </div>
+    </ProtectedRoute>
   );
 };
 

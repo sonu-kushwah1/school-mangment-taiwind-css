@@ -114,6 +114,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { setTheme, getTheme } from "@/utils/theme";
+import { clearAuth } from "@/utils/auth";
 
 export default function Navbar({ setSidebarOpen }: any) {
   const router = useRouter();
@@ -167,7 +168,10 @@ export default function Navbar({ setSidebarOpen }: any) {
           {openDropdown && (
             <div className="absolute right-0 mt-2 w-40 bg-white text-black rounded-lg shadow-lg overflow-hidden z-50">
               <button
-                onClick={() => router.push("/login")}
+                onClick={() => {
+                  clearAuth();
+                  router.push("/login");
+                }}
                 className="w-full text-left px-4 py-2 hover:bg-gray-100"
               >
                 Logout

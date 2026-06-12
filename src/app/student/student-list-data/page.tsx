@@ -25,12 +25,13 @@ export default function StudentList() {
   const [students, setStudents] = useState<Student[]>([]);
   const router = useRouter();
 
-  const API = "http://localhost:5001/api/student";
+ const studentUrl =
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_STUDENT_API}`;
 
   // ✅ Fetch
   const fetchStudents = async () => {
     try {
-      const res = await axios.get(API);
+      const res = await axios.get(studentUrl);
       console.log(res.data);
       setStudents(res.data);
     } catch {
@@ -47,7 +48,7 @@ export default function StudentList() {
     if (!confirm("Delete this student?")) return;
 
     try {
-      await axios.delete(`${API}/${id}`);
+      await axios.delete(`${studentUrl}/${id}`);
       toast.success("Deleted successfully");
       fetchStudents();
     } catch {

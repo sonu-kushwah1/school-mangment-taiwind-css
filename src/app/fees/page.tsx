@@ -21,8 +21,14 @@ type ClassItem = {
 export default function FeesManager() {
 
   // ✅ API URLs
-  const CLASS_API = "http://localhost:5001/api/class";
-  const FEES_API = "http://localhost:5001/api/fees";
+   const CLASS_API =
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_CLASS_API}`;
+
+   const FEES_API =
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_FEES_API}`;
+
+  // const CLASS_API = "http://localhost:5001/api/class";
+  // const FEES_API = "http://localhost:5001/api/fees";
 
   // ✅ States
   const [classes, setClasses] = useState<ClassItem[]>([]);

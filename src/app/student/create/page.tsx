@@ -18,6 +18,13 @@ interface FeeItem {
 }
 
 export default function CreateEmployee() {
+
+   const studentUrl =
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_STUDENT_API}`;
+    
+  const feesUrl =
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_FEES_API}`;
+
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
@@ -43,7 +50,7 @@ export default function CreateEmployee() {
     const fetchFees = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:5001/api/fees"
+          feesUrl
         );
 
         console.log("FEES RESPONSE:", res.data);
@@ -121,7 +128,7 @@ export default function CreateEmployee() {
       console.log("PAYLOAD:", payload);
 
       const response = await axios.post(
-        "http://localhost:5001/api/student",
+        studentUrl,
         payload,
         {
           headers: {

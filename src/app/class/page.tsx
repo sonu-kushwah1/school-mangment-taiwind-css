@@ -10,7 +10,9 @@ import InputField from "@/component/InputFiled";
 export default function ClassManager() {
 
   // ✅ API URL
-  const API = "http://localhost:5001/api/class";
+   const API =
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_CLASS_API}`;
+  // const API = "http://localhost:5001/api/class";
 
   // ✅ States
   const [classInput, setClassInput] = useState("");
