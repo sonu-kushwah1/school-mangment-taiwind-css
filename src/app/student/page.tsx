@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import LayoutWrapper from "@/component/Layout";
 import Breadcrumb from "@/component/Breadcrumb";
 import CommonDataTable from "@/component/DataTable";
-import { api } from "@/api";
 
 import { Slide, toast, ToastContainer } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
@@ -16,7 +15,7 @@ type Student = {
   id: string;
   first_name: string;
   last_name: string;
-  email:string;
+  email: string;
   gender: string;
   mob_no: string;
 };
@@ -25,7 +24,7 @@ export default function StudentList() {
   const [students, setStudents] = useState<Student[]>([]);
   const router = useRouter();
 
- const studentUrl =
+  const studentUrl =
     `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_STUDENT_API}`;
 
   // ✅ Fetch
@@ -134,7 +133,7 @@ export default function StudentList() {
           title="Student List"
           data={students}
           columns={columns}
-          
+
         />
       </div>
 

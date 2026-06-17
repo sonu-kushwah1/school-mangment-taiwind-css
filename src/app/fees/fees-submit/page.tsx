@@ -27,7 +27,7 @@ export default function FeesSubmitPage() {
     total_fees: "",
     paid_fees: "",
     due_fees: "",
-    payment_method: "",
+    payment_method: "Cash",
     date: ""
   });
 
@@ -166,7 +166,7 @@ export default function FeesSubmitPage() {
           total_fees: "",
           paid_fees: "",
           due_fees: "",
-          payment_method: "",
+          payment_method: "Cash",
           date: ""
         });
 

@@ -34,7 +34,11 @@ export default function StudentList() {
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
       const res = await axios.get(studentUrl, { headers });
       console.log("user data api", res.data);
-      setStudents(res.data);
+      const responseData = res.data;
+      const usersArray = Array.isArray(responseData)
+        ? responseData
+        : (responseData && Array.isArray(responseData.data) ? responseData.data : []);
+      setStudents(usersArray);
     } catch (err) {
       console.error("Fetch users error:", err);
       toast.error("Failed to fetch students");
@@ -93,7 +97,7 @@ export default function StudentList() {
       cell: (student: Student) => (
         <div className="flex items-center gap-2 whitespace-nowrap">
           <button
-            onClick={() => router.push(`/student/edit/${student.id}`)}
+            onClick={() => router.push(`/user/edit/${student.id}`)}
             className="bg-green-600 text-white px-3 py-1 rounded text-sm"
           >
             Edit
@@ -127,7 +131,7 @@ export default function StudentList() {
           <h1 className="text-2xl font-bold">User List</h1>
 
           <button
-            onClick={() => router.push("/user/create")}
+            onClick={() => router.push("/registration")}
             className="bg-green-600 text-white px-4 py-2 rounded"
           >
             Add New User

@@ -21,10 +21,10 @@ type ClassItem = {
 export default function FeesManager() {
 
   // ✅ API URLs
-   const CLASS_API =
+  const CLASS_API =
     `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_CLASS_API}`;
 
-   const FEES_API =
+  const FEES_API =
     `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_FEES_API}`;
 
   // const CLASS_API = "http://localhost:5001/api/class";
@@ -294,11 +294,10 @@ export default function FeesManager() {
           {/* Button */}
           <button
             onClick={saveFees}
-            className={`text-white px-4 py-2 rounded ${
-              editId !== null
+            className={`text-white px-4 py-2 rounded ${editId !== null
                 ? "bg-blue-500"
                 : "bg-yellow-500"
-            }`}
+              }`}
           >
             {editId !== null
               ? "Update Fees"

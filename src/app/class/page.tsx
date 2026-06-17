@@ -7,6 +7,7 @@ import LayoutWrapper from "@/component/Layout";
 import Breadcrumb from "@/component/Breadcrumb";
 import InputField from "@/component/InputFiled";
 import CommonDataTable from "@/component/DataTable";
+import { Slide, toast, ToastContainer } from "react-toastify";
 
 type ClassItem = {
   id: number;
@@ -60,6 +61,7 @@ export default function ClassManager() {
           className: classInput,
         });
 
+        toast.success("Class Updated successfully");
         alert("Class updated successfully");
         setEditId(null);
       }
@@ -68,7 +70,7 @@ export default function ClassManager() {
         await axios.post(API, {
           className: classInput,
         });
-
+        toast.success("Class added successfully");
         alert("Class added successfully");
       }
 
@@ -93,13 +95,14 @@ export default function ClassManager() {
 
     try {
       await axios.delete(`${API}/${id}`);
-
       alert("Class deleted successfully");
-
+      toast.success("Class deleted successfully");
       fetchClasses();
     } catch (error) {
       console.error("DELETE ERROR:", error);
+
       alert("Delete failed");
+      toast.error("Delete failed");
     }
   };
 
@@ -168,11 +171,10 @@ export default function ClassManager() {
 
           <button
             onClick={handleAddClass}
-            className={`px-5 py-2 rounded text-white font-medium min-w-[140px] ${
-              editId !== null
-                ? "bg-blue-500 hover:bg-blue-600"
-                : "bg-yellow-500 hover:bg-yellow-600"
-            }`}
+            className={`px-5 py-2 rounded text-white font-medium min-w-[140px] ${editId !== null
+              ? "bg-blue-500 hover:bg-blue-600"
+              : "bg-yellow-500 hover:bg-yellow-600"
+              }`}
           >
             {editId !== null
               ? "Update Class"
@@ -187,6 +189,12 @@ export default function ClassManager() {
           columns={columns}
         />
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        transition={Slide}
+        theme="colored"
+      />
     </LayoutWrapper>
   );
 }

@@ -12,44 +12,47 @@ import { api } from "@/api";
 import { Slide, toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-type Student = {
+type StudentFee = {
   id: string;
-  first_name: string;
-  last_name: string;
-  email:string;
-  gender: string;
-  mob_no: string;
+  student_id: string;
+  student_name: string;
+  student_class: string;
+  total_fees: string;
+  paid_fees: string;
+  due_fees: string;
+  payment_method: string;
+  date: string;
 };
 
-export default function StudentList() {
-  const [students, setStudents] = useState<Student[]>([]);
+export default function FeesCollectionList() {
+  const [feeRecords, setFeeRecords] = useState<StudentFee[]>([]);
   const router = useRouter();
 
-  const API = "http://localhost:5001/api/student";
+  const API = "http://localhost:5001/api/studentfees";
 
   // ✅ Fetch
-  const fetchStudents = async () => {
+  const fetchFeeRecords = async () => {
     try {
       const res = await axios.get(API);
-      console.log(res.data);
-      setStudents(res.data);
+      console.log("Fetched fee records:", res.data);
+      setFeeRecords(res.data);
     } catch {
-      toast.error("Failed to fetch students");
+      toast.error("Failed to fetch fee records");
     }
   };
 
   useEffect(() => {
-    fetchStudents();
+    fetchFeeRecords();
   }, []);
 
   // ✅ Delete
   const handleDelete = async (id: string) => {
-    if (!confirm("Delete this student?")) return;
+    if (!confirm("Delete this fee record?")) return;
 
     try {
       await axios.delete(`${API}/${id}`);
       toast.success("Deleted successfully");
-      fetchStudents();
+      fetchFeeRecords();
     } catch {
       toast.error("Delete failed");
     }
@@ -58,60 +61,56 @@ export default function StudentList() {
   // ✅ Columns (IMPORTANT: library format)
   const columns = [
     {
-      name: "Student ID",
-      cell: (_: Student, index: number) => index + 1,
+      name: "S.No",
+      cell: (_: StudentFee, index: number) => index + 1,
       width: "80px",
     },
+    // {
+    //   name: "Student ID",
+    //   selector: (row: StudentFee) => row.student_id,
+    //   sortable: true,
+    // },
     {
       name: "Student Name",
-      selector: (row: Student) => row.first_name,
+      selector: (row: StudentFee) => row.student_name,
       sortable: true,
     },
     {
-      name: "Students Class",
-      selector: (row: Student) => row.last_name,
+      name: "Student Class",
+      selector: (row: StudentFee) => row.student_class,
       sortable: true,
     },
     {
       name: "Total Fees",
-      selector: (row: Student) => row.email,
-      sortable: true,
-    },
-    {
-      name: "Due Fees",
-      selector: (row: Student) => row.mob_no,
+      selector: (row: StudentFee) => row.total_fees,
       sortable: true,
     },
     {
       name: "Paid Fees",
-      selector: (row: Student) => row.mob_no,
+      selector: (row: StudentFee) => row.paid_fees,
+      sortable: true,
+    },
+    {
+      name: "Due Fees",
+      selector: (row: StudentFee) => row.due_fees,
       sortable: true,
     },
     {
       name: "Payment Method",
-      selector: (row: Student) => row.mob_no,
+      selector: (row: StudentFee) => row.payment_method,
+      sortable: true,
+    },
+    {
+      name: "Date",
+      selector: (row: StudentFee) => (row.date ? row.date.split("T")[0] : ""),
       sortable: true,
     },
     {
       name: "Actions",
-      cell: (student: Student) => (
+      cell: (row: StudentFee) => (
         <div className="flex items-center gap-2 whitespace-nowrap">
           <button
-            onClick={() => router.push(`/student/edit/${student.id}`)}
-            className="bg-green-600 text-white px-3 py-1 rounded text-sm"
-          >
-            Edit
-          </button>
-
-          <button
-            onClick={() => router.push(`/student/view/${student.id}`)}
-            className="bg-gray-600 text-white px-3 py-1 rounded text-sm"
-          >
-            View
-          </button>
-
-          <button
-            onClick={() => handleDelete(student.id)}
+            onClick={() => handleDelete(row.id)}
             className="bg-red-600 text-white px-3 py-1 rounded text-sm"
           >
             Delete
@@ -131,17 +130,17 @@ export default function StudentList() {
           <h1 className="text-2xl font-bold">Student Fees Record</h1>
 
           <button
-            onClick={() => router.push("/student/create")}
+            onClick={() => router.push("/fees/fees-submit")}
             className="bg-green-600 text-white px-4 py-2 rounded"
           >
-            Add New Student
+            Submit Fees
           </button>
         </div>
 
         {/* ✅ Correct Table */}
         <CommonDataTable
-          title="Student List"
-          data={students}
+          title="Fees Collection List"
+          data={feeRecords}
           columns={columns}
         />
       </div>

@@ -16,6 +16,7 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
   const pathname = usePathname();
 
   const [studentOpen, setStudentOpen] = useState(false);
+  const [feesOpen, setFeesOpen] = useState(false);
   const [empOpen, setEmpOpen] = useState(false);
   const [empROpen, setREmpOpen] = useState(false);
   const [classOpen, setClassOpen] = useState(false);
@@ -39,9 +40,8 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
         {/* Dashboard */}
         <Link
           href="/"
-          className={`flex items-center p-2 rounded hover:bg-[#063d7a] ${
-            pathname === "/" ? activeClass : ""
-          }`}
+          className={`flex items-center p-2 rounded hover:bg-[#063d7a] ${pathname === "/" ? activeClass : ""
+            }`}
         >
           <svg
             className={iconClass}
@@ -73,9 +73,8 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
             {/* Arrow Icon */}
             {sidebarOpen && (
               <FaChevronDown
-                className={`transition-transform duration-300 ${
-                  studentOpen ? "rotate-180" : ""
-                }`}
+                className={`transition-transform duration-300 ${studentOpen ? "rotate-180" : ""
+                  }`}
               />
             )}
           </button>
@@ -97,7 +96,7 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
                 <FaBook className="text-[#ffa601]" />
                 Admission Form
               </Link>
-              
+
               <Link
                 href="/fees/fees-submit"
                 className="flex items-center gap-2 p-2 text-sm rounded hover:bg-[#063d7a]"
@@ -123,9 +122,8 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
             {/* Arrow Icon */}
             {sidebarOpen && (
               <FaChevronDown
-                className={`transition-transform duration-300 ${
-                  empOpen ? "rotate-180" : ""
-                }`}
+                className={`transition-transform duration-300 ${empOpen ? "rotate-180" : ""
+                  }`}
               />
             )}
           </button>
@@ -157,7 +155,7 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
           )}
         </div>
 
-         {/* Employee redux*/}
+        {/* Employee redux*/}
         <div>
           <button
             onClick={() => setREmpOpen((prev) => !prev)}
@@ -171,9 +169,8 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
             {/* Arrow Icon */}
             {sidebarOpen && (
               <FaChevronDown
-                className={`transition-transform duration-300 ${
-                  empROpen ? "rotate-180" : ""
-                }`}
+                className={`transition-transform duration-300 ${empROpen ? "rotate-180" : ""
+                  }`}
               />
             )}
           </button>
@@ -194,7 +191,7 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
                 <FaBook className="text-[#ffa601]" />
                 Employee DataTable
               </Link>
-             
+
             </div>
           )}
         </div>
@@ -213,9 +210,8 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
             {/* Arrow Icon */}
             {sidebarOpen && (
               <FaChevronDown
-                className={`transition-transform duration-300 ${
-                  classOpen ? "rotate-180" : ""
-                }`}
+                className={`transition-transform duration-300 ${classOpen ? "rotate-180" : ""
+                  }`}
               />
             )}
           </button>
@@ -245,9 +241,8 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
         {/* reactDrapTable */}
         <Link
           href="/reactDrapTable"
-          className={`flex items-center p-2 rounded hover:bg-[#063d7a] ${
-            pathname === "/reactDrapTable" ? activeClass : ""
-          }`}
+          className={`flex items-center p-2 rounded hover:bg-[#063d7a] ${pathname === "/reactDrapTable" ? activeClass : ""
+            }`}
         >
           <svg
             className={iconClass}
@@ -263,11 +258,60 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
         </Link>
 
         {/* Fees */}
-        <Link
+        <div>
+          <button
+            onClick={() => setFeesOpen((prev) => !prev)}
+            className="w-full flex items-center justify-between p-2 rounded hover:bg-[#063d7a]"
+          >
+            <div className="flex items-center gap-2">
+              <FaUserGraduate className="text-lg text-[#ffa601]" />
+              {sidebarOpen && "Fees"}
+            </div>
+
+            {/* Arrow Icon */}
+            {sidebarOpen && (
+              <FaChevronDown
+                className={`transition-transform duration-300 ${feesOpen ? "rotate-180" : ""
+                  }`}
+              />
+            )}
+          </button>
+
+          {feesOpen && sidebarOpen && (
+            <div className="ml-6 mt-2 space-y-1">
+              <Link
+                href="/fees"
+                className="flex items-center gap-2 p-2 text-sm rounded hover:bg-[#063d7a]"
+              >
+                <FaBook className="text-[#ffa601]" />
+                Fees
+              </Link>
+
+              <Link
+                href="/fees/fees-submit"
+                className="flex items-center gap-2 p-2 text-sm rounded hover:bg-[#063d7a]"
+              >
+                <FaBook className="text-[#ffa601]" />
+                Fees Submit
+              </Link>
+              <Link
+                href="/fees/fees-collection"
+                className="flex items-center gap-2 p-2 text-sm rounded hover:bg-[#063d7a]"
+              >
+                <FaBook className="text-[#ffa601]" />
+                Fees Collection
+              </Link>
+
+
+            </div>
+          )}
+        </div>
+
+        {/* Fees */}
+        {/* <Link
           href="/fees"
-          className={`flex items-center p-2 rounded hover:bg-[#063d7a] ${
-            pathname === "/fees" ? activeClass : ""
-          }`}
+          className={`flex items-center p-2 rounded hover:bg-[#063d7a] ${pathname === "/fees" ? activeClass : ""
+            }`}
         >
           <svg
             className={iconClass}
@@ -280,14 +324,13 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
             <circle cx="12" cy="12" r="3"></circle>
           </svg>
           {sidebarOpen && "Fees"}
-        </Link>
+        </Link> */}
 
         {/* User */}
         <Link
           href="/user"
-          className={`flex items-center p-2 rounded hover:bg-[#063d7a] ${
-            pathname === "/user" ? activeClass : ""
-          }`}
+          className={`flex items-center p-2 rounded hover:bg-[#063d7a] ${pathname === "/user" ? activeClass : ""
+            }`}
         >
           <FaUser className={iconClass} />
 
@@ -296,9 +339,8 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
         {/* Transport */}
         <Link
           href="/transport"
-          className={`flex items-center p-2 rounded hover:bg-[#063d7a] ${
-            pathname === "/transport" ? activeClass : ""
-          }`}
+          className={`flex items-center p-2 rounded hover:bg-[#063d7a] ${pathname === "/transport" ? activeClass : ""
+            }`}
         >
           <svg
             className={iconClass}
@@ -329,9 +371,8 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
             {/* Arrow Icon */}
             {sidebarOpen && (
               <FaChevronDown
-                className={`transition-transform duration-300 ${
-                  accountOpen ? "rotate-180" : ""
-                }`}
+                className={`transition-transform duration-300 ${accountOpen ? "rotate-180" : ""
+                  }`}
               />
             )}
           </button>
@@ -353,9 +394,8 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
         {/* User Managment */}
         <Link
           href="/user-managment"
-          className={`flex items-center p-2 rounded hover:bg-[#063d7a] ${
-            pathname === "/user-managment" ? activeClass : ""
-          }`}
+          className={`flex items-center p-2 rounded hover:bg-[#063d7a] ${pathname === "/user-managment" ? activeClass : ""
+            }`}
         >
           <FaUser className={iconClass} />
 
@@ -364,18 +404,13 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
         {/* User Role */}
         <Link
           href="/roles-permission"
-          className={`flex items-center p-2 rounded hover:bg-[#063d7a] ${
-            pathname === "/roles-permission" ? activeClass : ""
-          }`}
+          className={`flex items-center p-2 rounded hover:bg-[#063d7a] ${pathname === "/roles-permission" ? activeClass : ""
+            }`}
         >
           <FaUser className={iconClass} />
 
           {sidebarOpen && "Roles Permission"}
         </Link>
-        
-     
-        
-     
       </nav>
     </aside>
   );

@@ -195,6 +195,22 @@ export default function UserRegistration() {
             </div>
           </div>
 
+          <div>
+            <label className="block text-sm font-medium mb-1">Confirm Password</label>
+
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="Confirm password"
+                className="w-full border rounded-md px-3 py-2 pr-10 focus:ring-2 focus:ring-blue-500 outline-none"
+                required
+              />
+            </div>
+          </div>
+
           {/* Submit Button */}
           <button
             type="submit"
