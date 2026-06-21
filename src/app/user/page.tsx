@@ -38,7 +38,12 @@ export default function StudentList() {
       const usersArray = Array.isArray(responseData)
         ? responseData
         : (responseData && Array.isArray(responseData.data) ? responseData.data : []);
-      setStudents(usersArray);
+
+      const mappedUsers = usersArray.map((u: any) => ({
+        ...u,
+        id: u.id || u._id,
+      }));
+      setStudents(mappedUsers);
     } catch (err) {
       console.error("Fetch users error:", err);
       toast.error("Failed to fetch students");
@@ -51,12 +56,13 @@ export default function StudentList() {
 
   // ✅ Delete
   const handleDelete = async (id: string) => {
-    if (!confirm("Delete this student?")) return;
+    if (!confirm("Delete this user?")) return;
 
     try {
       const token = getAuthToken();
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
-      await axios.delete(`${studentUrl}/${id}`, { headers });
+      const deleteUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_AUTH_API}/user/${id}`;
+      await axios.delete(deleteUrl, { headers });
       toast.success("Deleted successfully");
       fetchStudents();
     } catch (err) {
@@ -104,7 +110,7 @@ export default function StudentList() {
           </button>
 
           <button
-            onClick={() => router.push(`/student/view/${student.id}`)}
+            onClick={() => router.push(`/user/view/${student.id}`)}
             className="bg-gray-600 text-white px-3 py-1 rounded text-sm"
           >
             View

@@ -36,7 +36,7 @@ export default function EditUser() {
 
     // ✅ Fetch User By ID
     useEffect(() => {
-        if (!id) return;
+        if (!id || id === "undefined") return;
 
         const fetchUser = async () => {
             try {
@@ -44,21 +44,22 @@ export default function EditUser() {
                 const token = getAuthToken();
                 const headers = token ? { Authorization: `Bearer ${token}` } : {};
                 const baseUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_AUTH_API}/users`;
-                
+
                 let userData: any = null;
 
                 // 1. Try to fetch specific user by ID first
                 try {
-                    console.log("FETCH USER BY ID:", `${baseUrl}/${id}`);
-                    const res = await axios.get(`${baseUrl}/${id}`, { headers });
+                    const fetchUrl = `${baseUrl}/${id}`;
+                    console.log("FETCH USER BY ID:", fetchUrl);
+                    const res = await axios.get(fetchUrl, { headers });
                     console.log("USER BY ID RESPONSE:", res.data);
-                    
+
                     const extracted = res.data.data || res.data.user || res.data;
-                    
+
                     if (extracted && typeof extracted === "object") {
                         userData = Array.isArray(extracted) ? extracted[0] : extracted;
                     }
-                    
+
                     // Verify we got a valid object with actual fields, not a 404/empty response
                     if (userData && !userData.fname && !userData.name && !userData.email) {
                         userData = null; // trigger fallback if empty fields
@@ -72,11 +73,11 @@ export default function EditUser() {
                     console.log("FETCHING ALL USERS AS FALLBACK:", baseUrl);
                     const res = await axios.get(baseUrl, { headers });
                     console.log("ALL USERS RESPONSE:", res.data);
-                    
+
                     const usersArray = Array.isArray(res.data)
                         ? res.data
                         : (res.data.data || res.data.user || res.data || []);
-                    
+
                     if (Array.isArray(usersArray)) {
                         userData = usersArray.find(
                             (u: any) => String(u.id) === String(id) || String(u._id) === String(id)
@@ -127,8 +128,11 @@ export default function EditUser() {
     // ✅ Update User
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        console.log("=== handleSubmit triggered ===");
+        console.log("ID:", id);
+        console.log("FormData:", formData);
 
-        if (!id) {
+        if (!id || id === "undefined") {
             toast.error("User ID not found");
             return;
         }
@@ -136,11 +140,10 @@ export default function EditUser() {
         try {
             const token = getAuthToken();
             const headers = token ? { Authorization: `Bearer ${token}` } : {};
-            const userUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_AUTH_API}/users/${id}`;
+            const userUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_AUTH_API}/user/${id}`;
 
             const updateData: any = {
                 fname: formData.fname,
-                name: formData.fname, // fallback
                 email: formData.email,
                 role: formData.role,
                 phone: formData.phone,
