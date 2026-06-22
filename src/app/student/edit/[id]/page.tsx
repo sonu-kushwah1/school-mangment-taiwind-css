@@ -71,7 +71,7 @@ export default function EditStudent() {
 
   // ✅ Form Data
   const [formData, setFormData] = useState({
-     first_name: "",
+    first_name: "",
     last_name: "",
     gender: "male",
     mob_no: "",
@@ -91,8 +91,8 @@ export default function EditStudent() {
 
       try {
 
-        const feesUrl = process.env.NEXT_PUBLIC_API_BASE_URL 
-          ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_FEES_API}` 
+        const feesUrl = process.env.NEXT_PUBLIC_API_BASE_URL
+          ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_FEES_API}`
           : "http://localhost:5001/api/fees";
         const token = getAuthToken();
         const headers = token ? { Authorization: `Bearer ${token}` } : {};
@@ -133,8 +133,8 @@ export default function EditStudent() {
 
         setLoading(true);
 
-        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL 
-          ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_STUDENT_API}` 
+        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
+          ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_STUDENT_API}`
           : "http://localhost:5001/api/student";
         const token = getAuthToken();
         const headers = token ? { Authorization: `Bearer ${token}` } : {};
@@ -269,7 +269,7 @@ export default function EditStudent() {
       submissionData.append("class_name", formData.class_name);
       submissionData.append("section", formData.section);
       submissionData.append("fees", formData.fees ? String(Number(formData.fees)) : "0");
-      
+
       if (imageFile) {
         submissionData.append("student_img", imageFile);
       } else if (existingImage === null) {
@@ -279,8 +279,8 @@ export default function EditStudent() {
 
       console.log("Updating student FormData...");
 
-      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL 
-        ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_STUDENT_API}` 
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
+        ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_STUDENT_API}`
         : "http://localhost:5001/api/student";
       const token = getAuthToken();
       const headers: Record<string, string> = {};
@@ -317,8 +317,8 @@ export default function EditStudent() {
         "Update Error:",
         error
       );
-      const errMsg = error.response?.data?.message || error.response?.data?.error || error.message || "Failed to update student";
-      toast.error(errMsg);
+
+      toast.error("Failed to update student");
 
     }
   };
@@ -420,9 +420,9 @@ export default function EditStudent() {
                 options={
                   Array.isArray(feesList)
                     ? feesList.map((item) => ({
-                        label: item.className,
-                        value: item.className,
-                      }))
+                      label: item.className,
+                      value: item.className,
+                    }))
                     : []
                 }
               />
@@ -463,7 +463,7 @@ export default function EditStudent() {
                 <label className="block text-sm font-semibold mb-2 text-[#042954]">
                   Student Photo
                 </label>
-                
+
                 <div className="border-2 border-dashed border-[#ffa601] rounded-lg p-4 bg-gray-50 hover:bg-gray-100 transition duration-200">
                   {!imagePreview ? (
                     <label className="flex flex-col items-center justify-center cursor-pointer py-4">
