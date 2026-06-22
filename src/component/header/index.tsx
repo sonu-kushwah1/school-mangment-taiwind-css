@@ -121,17 +121,52 @@ export default function Navbar({ setSidebarOpen }: any) {
 
   const [openDropdown, setOpenDropdown] = useState(false);
   const [theme, setThemeState] = useState<"light" | "dark">("light");
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
     const savedTheme = getTheme();
     setThemeState(savedTheme);
     setTheme(savedTheme);
+
+    // ✅ Load user from localStorage
+    if (typeof window !== "undefined") {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        try {
+          setUser(JSON.parse(storedUser));
+        } catch (e) {
+          console.error("Error parsing user from localStorage:", e);
+        }
+      }
+    }
   }, []);
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setThemeState(newTheme);
     setTheme(newTheme);
+  };
+
+  const getFullImageUrl = (imgUrl: string) => {
+    if (!imgUrl) return "";
+    if (imgUrl.startsWith("http://") || imgUrl.startsWith("https://")) {
+      return imgUrl;
+    }
+    const baseUrl = "http://localhost:5001";
+    if (imgUrl.startsWith("/") || imgUrl.startsWith("uploads/") || imgUrl.startsWith("/uploads/")) {
+      const cleanPath = imgUrl.startsWith("/") ? imgUrl : `/${imgUrl}`;
+      return `${baseUrl}${cleanPath}`;
+    }
+    return `${baseUrl}/uploads/${imgUrl}`;
+  };
+
+  const getInitials = (name: string) => {
+    if (!name) return "U";
+    const parts = name.trim().split(/\s+/);
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+    return name.slice(0, 2).toUpperCase();
   };
 
   return (
@@ -147,7 +182,7 @@ export default function Navbar({ setSidebarOpen }: any) {
 
       {/* Right Section */}
       <div className="flex items-center gap-4 relative">
-        
+
         {/* 🌙 Theme Toggle */}
         <button
           onClick={toggleTheme}
@@ -157,27 +192,52 @@ export default function Navbar({ setSidebarOpen }: any) {
         </button>
 
         {/* Profile */}
-        <div className="relative">
-          <img
-            src="https://i.pravatar.cc/40"
-            onClick={() => setOpenDropdown(!openDropdown)}
-            className="w-8 h-8 rounded-full border-2 border-[#ffa601] cursor-pointer"
-          />
-
-          {/* Dropdown */}
-          {openDropdown && (
-            <div className="absolute right-0 mt-2 w-40 bg-white text-black rounded-lg shadow-lg overflow-hidden z-50">
-              <button
-                onClick={() => {
-                  clearAuth();
-                  router.push("/login");
-                }}
-                className="w-full text-left px-4 py-2 hover:bg-gray-100"
-              >
-                Logout
-              </button>
-            </div>
+        <div className="flex items-center gap-3">
+          {user && (
+            <span className="text-sm font-semibold hidden md:inline text-white/95 select-none">
+              {user.fname || user.name || "User"}
+            </span>
           )}
+
+          <div className="relative">
+            {user?.user_profile ? (
+              <img
+                src={getFullImageUrl(user.user_profile)}
+                onClick={() => setOpenDropdown(!openDropdown)}
+                className="w-8 h-8 rounded-full border-2 border-[#ffa601] cursor-pointer object-cover"
+                onError={(e) => {
+                  (e.target as HTMLElement).style.display = 'none';
+                  const fallback = document.getElementById("avatar-fallback");
+                  if (fallback) fallback.style.display = 'flex';
+                }}
+              />
+            ) : null}
+
+            {/* Initials Fallback if no user_profile or if image fails */}
+            <div
+              id="avatar-fallback"
+              onClick={() => setOpenDropdown(!openDropdown)}
+              style={{ display: user?.user_profile ? 'none' : 'flex' }}
+              className="w-8 h-8 rounded-full border-2 border-[#ffa601] bg-[#ffa601] text-white flex items-center justify-center font-bold text-xs cursor-pointer select-none transition hover:bg-[#e59200]"
+            >
+              {getInitials(user?.fname || user?.name)}
+            </div>
+
+            {/* Dropdown */}
+            {openDropdown && (
+              <div className="absolute right-0 mt-2 w-40 bg-white text-black rounded-lg shadow-lg overflow-hidden z-50">
+                <button
+                  onClick={() => {
+                    clearAuth();
+                    router.push("/login");
+                  }}
+                  className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
       </div>

@@ -11,6 +11,7 @@ import SelectField from "@/component/selectFiled";
 import Button from "@/component/Button";
 import { getAuthToken } from "@/utils/auth";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { FaCloudUploadAlt, FaTrashAlt } from "react-icons/fa";
 
 export default function EditUser() {
     const router = useRouter();
@@ -24,6 +25,33 @@ export default function EditUser() {
 
     // ✅ Password visibility
     const [showPassword, setShowPassword] = useState(false);
+
+    // ✅ Image State
+    const [imageFile, setImageFile] = useState<File | null>(null);
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const [existingImage, setExistingImage] = useState<string | null>(null);
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const file = e.target.files[0];
+            if (!file.type.startsWith("image/")) {
+                toast.error("Please upload an image file");
+                return;
+            }
+            setImageFile(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleRemoveImage = () => {
+        setImageFile(null);
+        setImagePreview(null);
+        setExistingImage(null);
+    };
 
     // ✅ Form Data state using actual User API fields
     const [formData, setFormData] = useState({
@@ -103,6 +131,23 @@ export default function EditUser() {
                     phone,
                     password: "",
                 });
+
+                // ✅ Set Image URL
+                const rawImage = userData.user_profile || userData.image;
+                if (rawImage) {
+                    const baseUrl = "http://localhost:5001";
+                    let fullUrl = "";
+                    if (rawImage.startsWith("http://") || rawImage.startsWith("https://")) {
+                        fullUrl = rawImage;
+                    } else if (rawImage.startsWith("/") || rawImage.startsWith("uploads/") || rawImage.startsWith("/uploads/")) {
+                        const cleanPath = rawImage.startsWith("/") ? rawImage : `/${rawImage}`;
+                        fullUrl = `${baseUrl}${cleanPath}`;
+                    } else {
+                        fullUrl = `${baseUrl}/uploads/${rawImage}`;
+                    }
+                    setExistingImage(fullUrl);
+                    setImagePreview(fullUrl);
+                }
             } catch (error: any) {
                 console.error("User Fetch Error:", error);
                 toast.error("Failed to fetch user data");
@@ -142,22 +187,51 @@ export default function EditUser() {
             const headers = token ? { Authorization: `Bearer ${token}` } : {};
             const userUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_AUTH_API}/user/${id}`;
 
-            const updateData: any = {
-                fname: formData.fname,
-                email: formData.email,
-                role: formData.role,
-                phone: formData.phone,
-            };
+            const submissionData = new FormData();
+            submissionData.append("fname", formData.fname);
+            submissionData.append("email", formData.email);
+            submissionData.append("role", formData.role);
+            submissionData.append("phone", formData.phone);
 
             // Only update password if user entered one
             if (formData.password) {
-                updateData.password = formData.password;
+                submissionData.append("password", formData.password);
             }
 
-            console.log("Updating user with data:", updateData);
+            // Handle user profile image file upload
+            if (imageFile) {
+                submissionData.append("user_profile", imageFile);
+            } else if (existingImage === null) {
+                submissionData.append("user_profile", "null");
+            }
 
-            const res = await axios.put(userUrl, updateData, { headers });
+            console.log("Updating user with FormData...");
+
+            const res = await axios.put(userUrl, submissionData, {
+                headers: {
+                    ...headers,
+                },
+            });
             console.log("UPDATE RESPONSE:", res.data);
+
+            // ✅ If the updated user is the currently logged-in user, update their localStorage details
+            if (typeof window !== "undefined") {
+                const storedUserStr = localStorage.getItem("user");
+                if (storedUserStr) {
+                    const storedUser = JSON.parse(storedUserStr);
+                    if (String(storedUser.id) === String(id) || String(storedUser._id) === String(id)) {
+                        const updatedUser = {
+                            ...storedUser,
+                            fname: res.data.user?.fname || formData.fname,
+                            email: res.data.user?.email || formData.email,
+                            phone: res.data.user?.phone || formData.phone,
+                            role: res.data.user?.role || formData.role,
+                            user_profile: res.data.user?.user_profile !== undefined ? res.data.user.user_profile : storedUser.user_profile,
+                        };
+                        localStorage.setItem("user", JSON.stringify(updatedUser));
+                    }
+                }
+            }
 
             toast.success("User Updated Successfully");
 
@@ -255,6 +329,53 @@ export default function EditUser() {
                                     >
                                         {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
                                     </button>
+                                </div>
+                            </div>
+
+                            {/* IMAGE UPLOAD */}
+                            <div className="md:col-span-2">
+                                <label className="block text-sm font-semibold mb-2 text-[#042954]">
+                                    User Profile Picture
+                                </label>
+
+                                <div className="border-2 border-dashed border-[#ffa601] rounded-lg p-4 bg-gray-50 hover:bg-gray-100 transition duration-200">
+                                    {!imagePreview ? (
+                                        <label className="flex flex-col items-center justify-center cursor-pointer py-4">
+                                            <FaCloudUploadAlt className="text-4xl text-[#042954] mb-2" />
+                                            <span className="text-sm font-medium text-[#042954]">Click to Upload Photo</span>
+                                            <span className="text-xs text-gray-500 mt-1">PNG, JPG, JPEG, WEBP up to 5MB</span>
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={handleFileChange}
+                                                className="hidden"
+                                            />
+                                        </label>
+                                    ) : (
+                                        <div className="flex flex-col sm:flex-row items-center gap-4 justify-between">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-16 h-16 rounded-full overflow-hidden border border-[#ffa601] relative bg-white">
+                                                    <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                                                </div>
+                                                <div>
+                                                    <p className="text-sm font-semibold text-[#042954] break-all max-w-[200px] sm:max-w-xs">
+                                                        {imageFile ? imageFile.name : "Existing Photo"}
+                                                    </p>
+                                                    <p className="text-xs text-gray-500">
+                                                        {imageFile ? (imageFile.size / 1024 / 1024).toFixed(2) + " MB" : "Currently Saved"}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={handleRemoveImage}
+                                                className="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-600 rounded-md hover:bg-red-100 transition text-sm font-medium cursor-pointer"
+                                            >
+                                                <FaTrashAlt />
+                                                <span>Remove</span>
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 

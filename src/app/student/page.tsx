@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import LayoutWrapper from "@/component/Layout";
 import Breadcrumb from "@/component/Breadcrumb";
 import CommonDataTable from "@/component/DataTable";
+import { getAuthToken } from "@/utils/auth";
 
 import { Slide, toast, ToastContainer } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
@@ -30,7 +31,9 @@ export default function StudentList() {
   // ✅ Fetch
   const fetchStudents = async () => {
     try {
-      const res = await axios.get(studentUrl);
+      const token = getAuthToken();
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      const res = await axios.get(studentUrl, { headers });
       console.log(res.data);
       setStudents(res.data);
     } catch {
@@ -47,11 +50,14 @@ export default function StudentList() {
     if (!confirm("Delete this student?")) return;
 
     try {
-      await axios.delete(`${studentUrl}/${id}`);
+      const token = getAuthToken();
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      await axios.delete(`${studentUrl}/${id}`, { headers });
       toast.success("Deleted successfully");
       fetchStudents();
-    } catch {
-      toast.error("Delete failed");
+    } catch (error: any) {
+      const errMsg = error.response?.data?.message || error.response?.data?.error || error.message || "Delete failed";
+      toast.error(errMsg);
     }
   };
 

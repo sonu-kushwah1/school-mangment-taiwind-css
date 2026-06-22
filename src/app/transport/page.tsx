@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { getAuthToken } from "@/utils/auth";
 
 import LayoutWrapper from "@/component/Layout";
 import Breadcrumb from "@/component/Breadcrumb";
@@ -20,7 +21,9 @@ type Transport = {
 export default function TransportManager() {
 
   // ✅ API
-  const API = "http://localhost:5001/api/transport";
+  const API = process.env.NEXT_PUBLIC_API_BASE_URL 
+    ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/transport` 
+    : "http://localhost:5001/api/transport";
 
   // ✅ Form States
   const [routeName, setRouteName] = useState("");
@@ -44,7 +47,9 @@ export default function TransportManager() {
 
     try {
 
-      const res = await axios.get(API);
+      const token = getAuthToken();
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      const res = await axios.get(API, { headers });
 
       console.log("GET RESPONSE:", res.data);
 
@@ -104,12 +109,16 @@ export default function TransportManager() {
 
     try {
 
+      const token = getAuthToken();
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
       // ✅ UPDATE
       if (editId !== null) {
 
         const res = await axios.put(
           `${API}/${editId}`,
-          payload
+          payload,
+          { headers }
         );
 
         console.log("UPDATE RESPONSE:", res.data);
@@ -125,7 +134,8 @@ export default function TransportManager() {
 
         const res = await axios.post(
           API,
-          payload
+          payload,
+          { headers }
         );
 
         console.log("CREATE RESPONSE:", res.data);
@@ -173,8 +183,11 @@ export default function TransportManager() {
 
     try {
 
+      const token = getAuthToken();
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
       const res = await axios.delete(
-        `${API}/${id}`
+        `${API}/${id}`,
+        { headers }
       );
 
       console.log("DELETE RESPONSE:", res.data);
@@ -183,11 +196,11 @@ export default function TransportManager() {
 
       fetchTransport();
 
-    } catch (error) {
+    } catch (error: any) {
 
       console.log("DELETE ERROR:", error);
-
-      alert("Delete failed");
+      const errMsg = error.response?.data?.message || error.response?.data?.error || error.message || "Delete failed";
+      alert(errMsg);
 
     }
   };

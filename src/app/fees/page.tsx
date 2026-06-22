@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import LayoutWrapper from "@/component/Layout";
 import Breadcrumb from "@/component/Breadcrumb";
 import axios from "axios";
+import { getAuthToken } from "@/utils/auth";
 import CommonDataTable from "@/component/DataTable";
 
 type Fees = {
@@ -93,7 +94,9 @@ export default function FeesManager() {
 
     try {
 
-      const res = await axios.get(CLASS_API);
+      const token = getAuthToken();
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      const res = await axios.get(CLASS_API, { headers });
 
       console.log("CLASS RESPONSE:", res.data);
 
@@ -114,7 +117,9 @@ export default function FeesManager() {
 
     try {
 
-      const res = await axios.get(FEES_API);
+      const token = getAuthToken();
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      const res = await axios.get(FEES_API, { headers });
 
       console.log("FEES RESPONSE:", res.data);
 
@@ -156,6 +161,9 @@ export default function FeesManager() {
 
     try {
 
+      const token = getAuthToken();
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
       // ✅ UPDATE
       if (editId !== null) {
 
@@ -163,7 +171,7 @@ export default function FeesManager() {
           classId,
           className,
           fees,
-        });
+        }, { headers });
 
         alert("Fees updated successfully");
 
@@ -178,7 +186,7 @@ export default function FeesManager() {
           classId,
           className,
           fees,
-        });
+        }, { headers });
 
         alert("Fees added successfully");
 
@@ -192,11 +200,11 @@ export default function FeesManager() {
       // ✅ Refresh Data
       getFees();
 
-    } catch (error) {
+    } catch (error: any) {
 
       console.error("Error saving fees:", error);
-
-      alert("Something went wrong");
+      const errMsg = error.response?.data?.message || error.response?.data?.error || error.message || "Something went wrong";
+      alert(errMsg);
 
     }
   };
@@ -212,17 +220,19 @@ export default function FeesManager() {
 
     try {
 
-      await axios.delete(`${FEES_API}/${id}`);
+      const token = getAuthToken();
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      await axios.delete(`${FEES_API}/${id}`, { headers });
 
       alert("Fees deleted successfully");
 
       getFees();
 
-    } catch (error) {
+    } catch (error: any) {
 
       console.error("Error deleting fees:", error);
-
-      alert("Delete failed");
+      const errMsg = error.response?.data?.message || error.response?.data?.error || error.message || "Delete failed";
+      alert(errMsg);
 
     }
   };

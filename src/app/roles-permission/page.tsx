@@ -23,20 +23,20 @@ export default function EmployeeList() {
     fetchUsers();
   }, []);
 
-const handleDelete = async (user_id: string) => {
-  if (!confirm("Are you sure you want to delete this user?")) return;
+  const handleDelete = async (user_id: string) => {
+    if (!confirm("Are you sure you want to delete this user?")) return;
 
-  try {
-    await axios.delete(`http://localhost:5000/users/${user_id}`);
+    try {
+      await axios.delete(`http://localhost:5000/users/${user_id}`);
 
-    toast.success("User Deleted Successfully");
+      toast.success("User Deleted Successfully");
 
-    fetchUsers(); // refresh list
-  } catch (error) {
-    console.error(error);
-    toast.error("Failed to delete user");
-  }
-};
+      fetchUsers(); // refresh list
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to delete user");
+    }
+  };
 
   return (
     <LayoutWrapper>
@@ -49,7 +49,7 @@ const handleDelete = async (user_id: string) => {
             onClick={() => router.push("/emp/create")}
             className="bg-green-600 text-white px-4 py-2 rounded"
           >
-           Create Role
+            Create Role
           </button>
         </div>
 
@@ -59,7 +59,7 @@ const handleDelete = async (user_id: string) => {
               <th className="border p-2 text-left">ID</th>
               <th className="border p-2 text-left">Name</th>
               <th className="border p-2 text-left">Permission</th>
-        
+
               <th className="border p-2 text-left">Users</th>
               <th className="border p-2 text-left">Created</th>
               <th className="border p-2 text-left">Actions</th>
@@ -67,23 +67,23 @@ const handleDelete = async (user_id: string) => {
           </thead>
 
           <tbody>
-            {users.map((user,index) => (
+            {users.map((user, index) => (
               <tr key={user.id}>
                 <td className="border p-2">{index + 1}</td>
                 <td className="border p-2">
                   {user.role}
                 </td>
-                 <td className="border p-2">
+                <td className="border p-2">
                   1 Permission
                 </td>
                 <td className="border p-2">
                   2 User
                 </td>
-               
+
                 <td className="border p-2">12/11/2025</td>
                 <td className="border p-2 space-x-2">
                   <button
-                   onClick={() => router.push(`/emp/edit/${user.id}`)}
+                    onClick={() => router.push(`/emp/edit/${user.id}`)}
                     className="bg-green-600 text-white px-3 py-1 rounded"
                   >
                     Edit

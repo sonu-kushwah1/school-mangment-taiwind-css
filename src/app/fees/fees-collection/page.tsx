@@ -3,6 +3,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { getAuthToken } from "@/utils/auth";
 
 import LayoutWrapper from "@/component/Layout";
 import Breadcrumb from "@/component/Breadcrumb";
@@ -33,7 +34,9 @@ export default function FeesCollectionList() {
   // ✅ Fetch
   const fetchFeeRecords = async () => {
     try {
-      const res = await axios.get(API);
+      const token = getAuthToken();
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      const res = await axios.get(API, { headers });
       console.log("Fetched fee records:", res.data);
       setFeeRecords(res.data);
     } catch {
@@ -50,7 +53,9 @@ export default function FeesCollectionList() {
     if (!confirm("Delete this fee record?")) return;
 
     try {
-      await axios.delete(`${API}/${id}`);
+      const token = getAuthToken();
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      await axios.delete(`${API}/${id}`, { headers });
       toast.success("Deleted successfully");
       fetchFeeRecords();
     } catch {

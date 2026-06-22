@@ -15,14 +15,20 @@ export default function DashboardPage() {
   const [activeUsers, setActiveUsers] = useState(0);
   const [usersList, setUsersList] = useState<any[]>([]);
 
-  const studentAPI = "http://localhost:5001/api/student";
-  const employeeAPI = "http://localhost:5001/api/emp";
+  const studentAPI = process.env.NEXT_PUBLIC_API_BASE_URL 
+    ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_STUDENT_API}` 
+    : "http://localhost:5001/api/student";
+  const employeeAPI = process.env.NEXT_PUBLIC_API_BASE_URL 
+    ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/emp` 
+    : "http://localhost:5001/api/emp";
   const USERS_API = "http://localhost:5001/api/auth/users"; // 🔥 users API
 
   // Fetch Students
   const getStudents = async () => {
     try {
-      const res = await axios.get(studentAPI);
+      const token = getAuthToken();
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      const res = await axios.get(studentAPI, { headers });
       console.log("students", res.data);
       const data = Array.isArray(res.data)
         ? res.data
@@ -36,7 +42,9 @@ export default function DashboardPage() {
   // Fetch Employees
   const getEmployees = async () => {
     try {
-      const res = await axios.get(employeeAPI);
+      const token = getAuthToken();
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      const res = await axios.get(employeeAPI, { headers });
       const data = Array.isArray(res.data)
         ? res.data
         : (res.data && Array.isArray(res.data.data) ? res.data.data : []);

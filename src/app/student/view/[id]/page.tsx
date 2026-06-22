@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
+import { getAuthToken } from "@/utils/auth";
 import LayoutWrapper from "@/component/Layout";
 import Breadcrumb from "@/component/Breadcrumb";
 import {
@@ -28,7 +29,12 @@ export default function ViewStudent() {
   useEffect(() => {
     const fetchStudent = async () => {
       try {
-        const res = await axios.get(`http://localhost:5001/api/student/${id}`);
+        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL 
+          ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_STUDENT_API}` 
+          : "http://localhost:5001/api/student";
+        const token = getAuthToken();
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        const res = await axios.get(`${baseUrl}/${id}`, { headers });
         const studentData = res.data.data || res.data.student || res.data;
         setStudent(studentData);
       } catch (error) {

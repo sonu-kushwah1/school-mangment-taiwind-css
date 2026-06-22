@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { getAuthToken } from "@/utils/auth";
 
 import LayoutWrapper from "@/component/Layout";
 import Breadcrumb from "@/component/Breadcrumb";
@@ -26,7 +27,9 @@ export default function ClassManager() {
   // ✅ Fetch Classes
   const fetchClasses = async () => {
     try {
-      const response = await axios.get(API);
+      const token = getAuthToken();
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      const response = await axios.get(API, { headers });
 
       console.log("FETCH RESPONSE:", response.data);
 
@@ -55,11 +58,14 @@ export default function ClassManager() {
     }
 
     try {
+      const token = getAuthToken();
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
       // UPDATE
       if (editId !== null) {
         await axios.put(`${API}/${editId}`, {
           className: classInput,
-        });
+        }, { headers });
 
         toast.success("Class Updated successfully");
         alert("Class updated successfully");
@@ -69,7 +75,7 @@ export default function ClassManager() {
       else {
         await axios.post(API, {
           className: classInput,
-        });
+        }, { headers });
         toast.success("Class added successfully");
         alert("Class added successfully");
       }
@@ -79,9 +85,11 @@ export default function ClassManager() {
 
       // Refresh data
       fetchClasses();
-    } catch (error) {
+    } catch (error: any) {
       console.error("SAVE ERROR:", error);
-      alert("Something went wrong");
+      const errMsg = error.response?.data?.message || error.response?.data?.error || error.message || "Something went wrong";
+      alert(errMsg);
+      toast.error(errMsg);
     }
   };
 
@@ -94,15 +102,17 @@ export default function ClassManager() {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`${API}/${id}`);
+      const token = getAuthToken();
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      await axios.delete(`${API}/${id}`, { headers });
       alert("Class deleted successfully");
       toast.success("Class deleted successfully");
       fetchClasses();
-    } catch (error) {
+    } catch (error: any) {
       console.error("DELETE ERROR:", error);
-
-      alert("Delete failed");
-      toast.error("Delete failed");
+      const errMsg = error.response?.data?.message || error.response?.data?.error || error.message || "Delete failed";
+      alert(errMsg);
+      toast.error(errMsg);
     }
   };
 

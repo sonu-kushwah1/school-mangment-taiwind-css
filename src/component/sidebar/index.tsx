@@ -109,7 +109,7 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
         </div>
 
         {/* Employee */}
-        <div>
+        {/* <div>
           <button
             onClick={() => setEmpOpen((prev) => !prev)}
             className="w-full flex items-center justify-between p-2 rounded hover:bg-[#063d7a]"
@@ -119,7 +119,7 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
               {sidebarOpen && "Employee"}
             </div>
 
-            {/* Arrow Icon */}
+    
             {sidebarOpen && (
               <FaChevronDown
                 className={`transition-transform duration-300 ${empOpen ? "rotate-180" : ""
@@ -153,10 +153,10 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
               </Link>
             </div>
           )}
-        </div>
+        </div> */}
 
         {/* Employee redux*/}
-        <div>
+        {/* <div>
           <button
             onClick={() => setREmpOpen((prev) => !prev)}
             className="w-full flex items-center justify-between p-2 rounded hover:bg-[#063d7a]"
@@ -166,7 +166,7 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
               {sidebarOpen && "Employee Redux"}
             </div>
 
-            {/* Arrow Icon */}
+          
             {sidebarOpen && (
               <FaChevronDown
                 className={`transition-transform duration-300 ${empROpen ? "rotate-180" : ""
@@ -194,7 +194,7 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
 
             </div>
           )}
-        </div>
+        </div> */}
 
         {/* Class */}
         <div>
@@ -239,7 +239,7 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
         </div>
 
         {/* reactDrapTable */}
-        <Link
+        {/* <Link
           href="/reactDrapTable"
           className={`flex items-center p-2 rounded hover:bg-[#063d7a] ${pathname === "/reactDrapTable" ? activeClass : ""
             }`}
@@ -255,7 +255,7 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
             <circle cx="12" cy="12" r="3"></circle>
           </svg>
           {sidebarOpen && "ReactDrapTable"}
-        </Link>
+        </Link> */}
 
         {/* Fees */}
         <div>
@@ -358,7 +358,7 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
         </Link>
 
         {/* Account */}
-        <div>
+        {/* <div>
           <button
             onClick={() => setAccountOpen((prev) => !prev)}
             className="w-full flex items-center justify-between p-2 rounded hover:bg-[#063d7a]"
@@ -368,7 +368,7 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
               {sidebarOpen && "Account"}
             </div>
 
-            {/* Arrow Icon */}
+        
             {sidebarOpen && (
               <FaChevronDown
                 className={`transition-transform duration-300 ${accountOpen ? "rotate-180" : ""
@@ -387,7 +387,7 @@ export default function Sidebar({ sidebarOpen }: { sidebarOpen: boolean }) {
               </Link>
             </div>
           )}
-        </div>
+        </div> */}
 
         {/* Account */}
 

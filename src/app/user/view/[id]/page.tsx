@@ -9,51 +9,80 @@ import {
     FaUser,
     FaEnvelope,
     FaPhone,
-    FaVenusMars,
-    FaCalendarAlt,
-    FaTint,
-    FaPray,
-    FaGraduationCap,
-    FaMoneyBillWave,
+    FaUserShield,
     FaArrowLeft
 } from "react-icons/fa";
+import { getAuthToken } from "@/utils/auth";
 
-export default function ViewStudent() {
+export default function ViewUser() {
     const { id } = useParams();
     const router = useRouter();
 
-    const [student, setStudent] = useState<any>(null);
+    const [user, setUser] = useState<any>(null);
     const [imageError, setImageError] = useState(false);
 
     useEffect(() => {
-        const fetchStudent = async () => {
+        const fetchUser = async () => {
             try {
-                const res = await axios.get(`http://localhost:5001/api/student/${id}`);
-                const studentData = res.data.data || res.data.student || res.data;
-                setStudent(studentData);
+                const token = getAuthToken();
+                const headers = token ? { Authorization: `Bearer ${token}` } : {};
+                const baseUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_AUTH_API}/users`;
+
+                let userData: any = null;
+
+                // 1. Try to fetch specific user by ID first
+                try {
+                    const res = await axios.get(`${baseUrl}/${id}`, { headers });
+                    const extracted = res.data.data || res.data.user || res.data;
+                    if (extracted && typeof extracted === "object") {
+                        userData = Array.isArray(extracted) ? extracted[0] : extracted;
+                    }
+                    if (userData && !userData.fname && !userData.name && !userData.email) {
+                        userData = null;
+                    }
+                } catch (err) {
+                    console.warn("Failed to fetch user by specific ID, trying fallback...", err);
+                }
+
+                // 2. Fallback: Fetch all users and find the user with matching ID
+                if (!userData) {
+                    const res = await axios.get(baseUrl, { headers });
+                    const usersArray = Array.isArray(res.data)
+                        ? res.data
+                        : (res.data.data || res.data.user || res.data || []);
+                    if (Array.isArray(usersArray)) {
+                        userData = usersArray.find(
+                            (u: any) => String(u.id) === String(id) || String(u._id) === String(id)
+                        );
+                    }
+                }
+
+                if (userData) {
+                    setUser(userData);
+                }
             } catch (error) {
-                console.error("Fetch error:", error);
+                console.error("Fetch user error:", error);
             }
         };
 
-        if (id) fetchStudent();
+        if (id) fetchUser();
     }, [id]);
 
-    if (!student) {
+    if (!user) {
         return (
             <LayoutWrapper>
                 <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                     <div className="text-center">
                         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600 mx-auto"></div>
-                        <p className="mt-4 text-gray-600 font-medium animate-pulse">Loading student profile...</p>
+                        <p className="mt-4 text-gray-600 font-medium animate-pulse">Loading user profile...</p>
                     </div>
                 </div>
             </LayoutWrapper>
         );
     }
 
-    // Handle student image URL
-    const rawImage = student.student_img || student.image;
+    // Handle user image URL
+    const rawImage = user.user_profile || user.image;
     const getFullImageUrl = (imgUrl: string) => {
         if (!imgUrl) return "";
         if (imgUrl.startsWith("http://") || imgUrl.startsWith("https://")) {
@@ -68,7 +97,8 @@ export default function ViewStudent() {
     };
 
     const imageUrl = getFullImageUrl(rawImage);
-    const initials = `${student.first_name?.[0] || ""}${student.last_name?.[0] || ""}`.toUpperCase();
+    const displayName = user.fname || user.name || "Anonymous User";
+    const initials = displayName.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2);
 
     return (
         <LayoutWrapper>
@@ -88,7 +118,7 @@ export default function ViewStudent() {
                                 {imageUrl && !imageError ? (
                                     <img
                                         src={imageUrl}
-                                        alt={`${student.first_name} ${student.last_name}`}
+                                        alt={displayName}
                                         className="w-full h-full object-cover"
                                         onError={() => setImageError(true)}
                                     />
@@ -99,19 +129,19 @@ export default function ViewStudent() {
                                 )}
                             </div>
 
-                            {/* Student Name */}
+                            {/* User Name */}
                             <h2 className="text-2xl md:text-3xl font-extrabold text-gray-800 mt-4 text-center">
-                                {student.first_name} {student.last_name}
+                                {displayName}
                             </h2>
 
                             {/* Badges / Quick Meta */}
                             <div className="flex flex-wrap items-center justify-center gap-2 mt-2">
                                 <span className="bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider border border-indigo-100">
-                                    ID: {student.id}
+                                    User ID: {user.id || user._id}
                                 </span>
-                                {student.class_name && (
-                                    <span className="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-semibold border border-emerald-100">
-                                        Class: {student.class_name} {student.section ? `(${student.section})` : ""}
+                                {user.role && (
+                                    <span className="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-semibold border border-emerald-100 uppercase tracking-wider">
+                                        Role: {user.role}
                                     </span>
                                 )}
                             </div>
@@ -121,7 +151,7 @@ export default function ViewStudent() {
                         <div className="border-t border-gray-100 pt-6">
                             <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
                                 <span className="w-1.5 h-6 bg-indigo-600 rounded-full"></span>
-                                Personal & Academic Details
+                                User Profile Details
                             </h3>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -133,94 +163,29 @@ export default function ViewStudent() {
                                     </div>
                                     <div>
                                         <span className="block text-xs font-semibold text-gray-400 uppercase tracking-wider">Email Address</span>
-                                        <span className="text-sm font-medium text-gray-700 break-all">{student.email || "N/A"}</span>
+                                        <span className="text-sm font-medium text-gray-700 break-all">{user.email || "N/A"}</span>
                                     </div>
                                 </div>
 
-                                {/* Mobile */}
+                                {/* Mobile / Phone */}
                                 <div className="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors duration-200">
                                     <div className="p-3 bg-green-50 text-green-600 rounded-lg">
                                         <FaPhone className="text-lg" />
                                     </div>
                                     <div>
-                                        <span className="block text-xs font-semibold text-gray-400 uppercase tracking-wider">Mobile Number</span>
-                                        <span className="text-sm font-medium text-gray-700">{student.mob_no || "N/A"}</span>
+                                        <span className="block text-xs font-semibold text-gray-400 uppercase tracking-wider">Phone Number</span>
+                                        <span className="text-sm font-medium text-gray-700">{user.phone || user.mob_no || "N/A"}</span>
                                     </div>
                                 </div>
 
-                                {/* Gender */}
+                                {/* Role */}
                                 <div className="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors duration-200">
                                     <div className="p-3 bg-purple-50 text-purple-600 rounded-lg">
-                                        <FaVenusMars className="text-lg" />
+                                        <FaUserShield className="text-lg" />
                                     </div>
                                     <div>
-                                        <span className="block text-xs font-semibold text-gray-400 uppercase tracking-wider">Gender</span>
-                                        <span className="text-sm font-medium text-gray-700 capitalize">{student.gender || "N/A"}</span>
-                                    </div>
-                                </div>
-
-                                {/* Date of Birth */}
-                                <div className="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors duration-200">
-                                    <div className="p-3 bg-orange-50 text-orange-600 rounded-lg">
-                                        <FaCalendarAlt className="text-lg" />
-                                    </div>
-                                    <div>
-                                        <span className="block text-xs font-semibold text-gray-400 uppercase tracking-wider">Date of Birth</span>
-                                        <span className="text-sm font-medium text-gray-700">
-                                            {student.dob ? new Date(student.dob).toLocaleDateString(undefined, {
-                                                year: 'numeric',
-                                                month: 'long',
-                                                day: 'numeric'
-                                            }) : "N/A"}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                {/* Blood Group */}
-                                <div className="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors duration-200">
-                                    <div className="p-3 bg-red-50 text-red-600 rounded-lg">
-                                        <FaTint className="text-lg" />
-                                    </div>
-                                    <div>
-                                        <span className="block text-xs font-semibold text-gray-400 uppercase tracking-wider">Blood Group</span>
-                                        <span className="text-sm font-medium text-gray-700">{student.blood_group || "N/A"}</span>
-                                    </div>
-                                </div>
-
-                                {/* Religion */}
-                                <div className="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors duration-200">
-                                    <div className="p-3 bg-yellow-50 text-yellow-600 rounded-lg">
-                                        <FaPray className="text-lg" />
-                                    </div>
-                                    <div>
-                                        <span className="block text-xs font-semibold text-gray-400 uppercase tracking-wider">Religion</span>
-                                        <span className="text-sm font-medium text-gray-700">{student.religion || "N/A"}</span>
-                                    </div>
-                                </div>
-
-                                {/* Class & Section */}
-                                <div className="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors duration-200">
-                                    <div className="p-3 bg-indigo-50 text-indigo-600 rounded-lg">
-                                        <FaGraduationCap className="text-lg" />
-                                    </div>
-                                    <div>
-                                        <span className="block text-xs font-semibold text-gray-400 uppercase tracking-wider">Class & Section</span>
-                                        <span className="text-sm font-medium text-gray-700">
-                                            {student.class_name || "N/A"} {student.section ? `- Section ${student.section}` : ""}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                {/* Fees */}
-                                <div className="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors duration-200">
-                                    <div className="p-3 bg-teal-50 text-teal-600 rounded-lg">
-                                        <FaMoneyBillWave className="text-lg" />
-                                    </div>
-                                    <div>
-                                        <span className="block text-xs font-semibold text-gray-400 uppercase tracking-wider">Fees / Tuition</span>
-                                        <span className="text-sm font-medium text-gray-700">
-                                            {student.fees ? `₹${Number(student.fees).toLocaleString()}` : "N/A"}
-                                        </span>
+                                        <span className="block text-xs font-semibold text-gray-400 uppercase tracking-wider">Account Role</span>
+                                        <span className="text-sm font-medium text-gray-700 capitalize">{user.role || "N/A"}</span>
                                     </div>
                                 </div>
 
@@ -230,7 +195,7 @@ export default function ViewStudent() {
                         {/* Back Button */}
                         <div className="mt-8 pt-6 border-t border-gray-100 flex justify-center">
                             <button
-                                onClick={() => router.push("/student")}
+                                onClick={() => router.push("/user")}
                                 className="flex items-center gap-2 bg-gradient-to-r from-gray-800 to-gray-900 hover:from-indigo-600 hover:to-indigo-700 text-white font-semibold px-6 py-2.5 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
                             >
                                 <FaArrowLeft />

@@ -6,6 +6,7 @@ import InputField from "@/component/InputFiled";
 import SelectField from "@/component/selectFiled";
 import { ToastContainer, toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { getAuthToken } from "@/utils/auth";
 
 interface Student {
   id: number;
@@ -34,7 +35,16 @@ export default function FeesSubmitPage() {
   // 🔥 Fetch Students
   useEffect(() => {
 
-    fetch("http://localhost:5001/api/student")
+    const token = getAuthToken();
+    const headers: Record<string, string> = {};
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+    const studentUrl = process.env.NEXT_PUBLIC_API_BASE_URL 
+      ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_STUDENT_API}` 
+      : "http://localhost:5001/api/student";
+
+    fetch(studentUrl, { headers })
       .then((res) => res.json())
       .then((data) => {
 
@@ -139,13 +149,22 @@ export default function FeesSubmitPage() {
 
       console.log("submit-data", formData);
 
+      const token = getAuthToken();
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json"
+      };
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+      const feesUrl = process.env.NEXT_PUBLIC_API_BASE_URL 
+        ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/studentfees` 
+        : "http://localhost:5001/api/studentfees";
+
       const response = await fetch(
-        "http://localhost:5001/api/studentfees",
+        feesUrl,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
+          headers,
           body: JSON.stringify(formData)
         }
       );

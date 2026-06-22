@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { getAuthToken } from "@/utils/auth";
 
 import LayoutWrapper from "@/component/Layout";
 import InputField from "@/component/InputFiled";
@@ -74,8 +75,11 @@ export default function CreateStudent() {
   useEffect(() => {
     const fetchFees = async () => {
       try {
+        const token = getAuthToken();
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
         const res = await axios.get(
-          feesUrl
+          feesUrl,
+          { headers }
         );
 
         console.log("FEES RESPONSE:", res.data);
@@ -160,13 +164,17 @@ export default function CreateStudent() {
 
       console.log("Submitting student FormData...");
 
+      const token = getAuthToken();
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+
       const response = await axios.post(
         studentUrl,
         submissionData,
         {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
+          headers
         }
       );
 

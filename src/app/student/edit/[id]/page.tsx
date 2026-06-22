@@ -8,6 +8,7 @@ import {
   useParams,
   useRouter,
 } from "next/navigation";
+import { getAuthToken } from "@/utils/auth";
 
 import LayoutWrapper from "@/component/Layout";
 
@@ -90,8 +91,14 @@ export default function EditStudent() {
 
       try {
 
+        const feesUrl = process.env.NEXT_PUBLIC_API_BASE_URL 
+          ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_FEES_API}` 
+          : "http://localhost:5001/api/fees";
+        const token = getAuthToken();
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
         const res = await axios.get(
-          "http://localhost:5001/api/fees"
+          feesUrl,
+          { headers }
         );
 
         console.log("FEES RESPONSE:", res.data);
@@ -126,8 +133,14 @@ export default function EditStudent() {
 
         setLoading(true);
 
+        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL 
+          ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_STUDENT_API}` 
+          : "http://localhost:5001/api/student";
+        const token = getAuthToken();
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
         const res = await axios.get(
-          `http://localhost:5001/api/student/${id}`
+          `${baseUrl}/${id}`,
+          { headers }
         );
 
         console.log("STUDENT RESPONSE:", res.data);
@@ -266,13 +279,20 @@ export default function EditStudent() {
 
       console.log("Updating student FormData...");
 
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL 
+        ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_STUDENT_API}` 
+        : "http://localhost:5001/api/student";
+      const token = getAuthToken();
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+
       const res = await axios.put(
-        `http://localhost:5001/api/student/${id}`,
+        `${baseUrl}/${id}`,
         submissionData,
         {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
+          headers
         }
       );
 
@@ -297,8 +317,8 @@ export default function EditStudent() {
         "Update Error:",
         error
       );
-
-      toast.error("Failed to update student");
+      const errMsg = error.response?.data?.message || error.response?.data?.error || error.message || "Failed to update student";
+      toast.error(errMsg);
 
     }
   };
